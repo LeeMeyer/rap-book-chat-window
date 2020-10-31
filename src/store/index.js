@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     isChatOpen: false,
     messageList: [
-      { id: 1, type: 'text', author: `me`, data: { text: `Say yes!` }, score: 65, scoreAnimatedEntranceDelay : 0  },
-      { id: 2, type: 'text', author: `user1`, data: { text: `No.` }, score: 65, scoreAnimatedEntranceDelay : 0  }
+      { id: 1, type: 'text', author: `me`, data: { text: `Say yes!` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0 },
+      { id: 2, type: 'text', author: `user1`, data: { text: `No.` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0 }
     ],
     participants: [
       {
@@ -50,11 +50,18 @@ export default new Vuex.Store({
     onMessageWasSent(state, message) {
       state.messageList = [ ...state.messageList, message ]
     },
+    updateOldScore(state, message) 
+    {
+      const m = state.messageList.find(m=>m.id === message.id);      
+      m.oldScore = m.score;
+    },
     editMessage(state, message){
-      const m = state.messageList.find(m=>m.id === message.id);
+      const m = state.messageList.find(m=>m.id === message.id);      
+      m.oldScore = m.score;
       m.isEdited = true;
       m.data.text = message.data.text;
-      m.score += 102;
+      m.score -= 5;
+      m.scoreBoostsCount++;
     },
     explainScore(state, message) {
       message.data.text = 'yes boss Say like a';

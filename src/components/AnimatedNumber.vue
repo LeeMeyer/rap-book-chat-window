@@ -8,6 +8,10 @@ export default {
         number: {
             type: Number,
             default: 0
+        },
+        delay: {
+            type: Number,
+            default: 0
         }
     },
     data() {
@@ -23,7 +27,7 @@ export default {
     watch: {
         number: function(newValue) {
             // eslint-disable-next-line no-undef
-            gsap.to(this.$data, { duration: 0.5, tweenedNumber: newValue });
+            gsap.to(this.$data, { duration: 0.5, tweenedNumber: newValue, delay: this.delay, oncomplete: () => this.$emit('animation-complete')});
         }
     }
 }

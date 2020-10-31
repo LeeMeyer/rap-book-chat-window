@@ -23,10 +23,12 @@
       @edit="editMessage" >
       <template v-slot:text-message-body="{ message }">
         <div style="padding: 5px;">
-           <TransitionedWords :transitionedHtml="message.data.text"/>    
+           <TransitionedWords :transitionedHtml="message.data.text" :transitionDuration="animationDuration" />    
         </div>
-          <div class="score-section animate__animated" :style="{ 'animation-delay': message.animatedScoreDelay }" :class="message.author == 'me' ? 'animate__lightSpeedInRight' : 'animate__lightSpeedInLeft'"  @click="clickScore(message)">
-              <span class="score"><AnimatedNumber :number="message.score"/>
+          <div class="score-section animate__animated" :style="{ 'animation-delay': message.scoreAnimatedEntranceDelay }" :class="message.author == 'me' ? 'animate__lightSpeedInRight' : 'animate__lightSpeedInLeft'" @click="explainScore(message)">
+              <span class="score">
+                <span class="rap-star animate__animated" :class="{ animate__bounce: message.oldScore < message.score }" :style="{ 'animation-delay': `${animationDuration}s` }" /> 
+                <AnimatedNumber :number="message.score" :delay="message.oldScore < message.score ? animationDuration * 2 : animationDuration" @animation-complete="$store.commit('updateOldScore', message)" />
                 <span class="explain-score-button">
                 <span class="text">why?</span>
             </span>
@@ -53,6 +55,7 @@ export default {
   },
   data() {
     return {
+      animationDuration: 1,
       titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
       showTypingIndicator: '', 
       colors: {
@@ -105,14 +108,18 @@ export default {
     editMessage(message){
       this.$store.commit('editMessage', message);
     },
-    clickScore(message) {
+    explainScore(message) {
       this.$store.commit('explainScore', message);
+    },
+    updateOldScore(message) {
+      this.$store.commit('updateOldScore', message);
     }
   }
 }
 </script>
 
 <style lang="scss">
+
 h3 {
   margin: 40px 0 0;
 }
@@ -150,7 +157,11 @@ a {
   right:50px;
 }
 
-.score::before {
+.rap-star {
+  display: inline-block;
+}
+
+.rap-star::after {
   content: '⭐'
 }
 

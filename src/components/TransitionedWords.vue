@@ -1,6 +1,5 @@
-<!-- Use preprocessors via the lang attribute! e.g. <template lang="pug"> -->
 <template>  
-  <transition-group name="list-complete" tag="span">
+  <transition-group name="list-complete" tag="span" :style="{ '--word-transition-duration' : `${this.transitionDuration}s`} " > 
     <span
       v-for="item in items"
       v-bind:key="item.id"
@@ -19,6 +18,10 @@ export default{
      transitionedHtml: {
       type: String,
       default: ''
+    },
+    transitionDuration: {
+      type: Number,
+      default: 1
     }
   },
   data() {
@@ -36,7 +39,7 @@ export default{
 
 <style>
 .list-complete-item {
-  transition: all 1s;
+  transition: all var(--word-transition-duration);
   display: inline-block;
 }
 
