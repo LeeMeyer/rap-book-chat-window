@@ -7,8 +7,8 @@ export default new Vuex.Store({
   state: {
     isChatOpen: false,
     messageList: [
-      { id: 1, type: 'text', author: `me`, data: { text: `Say yes!` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0 },
-      { id: 2, type: 'text', author: `user1`, data: { text: `No.` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0 }
+      { id: 1, type: 'text', author: `me`, data: { text: `Say yes!` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' },
+      { id: 2, type: 'text', author: `user1`, data: { text: `No.` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' }
     ],
     participants: [
       {
@@ -60,11 +60,14 @@ export default new Vuex.Store({
       m.oldScore = m.score;
       m.isEdited = true;
       m.data.text = message.data.text;
-      m.score -= 5;
+      m.score += 5;
       m.scoreBoostsCount++;
     },
     explainScore(state, message) {
-      message.data.text = 'yes boss Say like a';
+      //message.data.text = 'yes boss Say like a';
+
+      const m = state.messageList.find(m=>m.id === message.id);
+      m.scoreExplanation = 'yes boss Say like a';
     }
   }
 })

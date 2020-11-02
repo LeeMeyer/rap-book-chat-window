@@ -1,4 +1,7 @@
 <template>
+<div>
+    <div ref="modal" id="modal"></div>
+
     <beautiful-chat ref="chat"
       :participants="participants"
       :titleImageUrl="titleImageUrl"
@@ -14,28 +17,35 @@
       :showDeletion="false"
       :deletionConfirmation="false"
       :showTypingIndicator="showTypingIndicator"
-      :showLauncher="true"
+      :showLauncher="false"
       :showCloseButton="true"
       :colors="colors"
       :alwaysScrollToBottom="true"
       :disableUserListToggle="false"
       :messageStyling="messageStyling"  
       @edit="editMessage" >
-      <template v-slot:text-message-body="{ message }">
-        <div style="padding: 5px;">
-           <TransitionedWords :transitionedHtml="message.data.text" :transitionDuration="animationDuration" />    
-        </div>
-          <div class="score-section animate__animated" :style="{ 'animation-delay': message.scoreAnimatedEntranceDelay }" :class="message.author == 'me' ? 'animate__lightSpeedInRight' : 'animate__lightSpeedInLeft'" @click="explainScore(message)">
-              <span class="score">
-                <span class="rap-star animate__animated" :class="{ animate__bounce: message.oldScore < message.score }" :style="{ 'animation-delay': `${animationDuration}s` }" /> 
-                <AnimatedNumber :number="message.score" :delay="message.oldScore < message.score ? animationDuration * 2 : animationDuration" @animation-complete="$store.commit('updateOldScore', message)" />
-                <span class="explain-score-button">
-                <span class="text">why?</span>
-            </span>
-          </span>
-        </div>
-    </template>
-    </beautiful-chat>
+
+      <template v-slot:header>
+          </template>
+          <template v-slot:text-message-body="{ message }">
+            <div style="padding: 5px;">
+
+              <TransitionedWords :transitionedHtml="message.data.text" :transitionDuration="animationDuration" :morphToModal="!!message.scoreExplanation" />    
+            </div>
+              <div class="score-section animate__animated" :style="{ 'animation-delay': message.scoreAnimatedEntranceDelay }" :class="message.author == 'me' ? 'animate__lightSpeedInRight' : 'animate__lightSpeedInLeft'" @click="explainScore(message, $event)">
+                  <span class="score">
+                    <span class="rap-star animate__animated" :class="{ animate__heartBeat: message.oldScore < message.score }" :style="{ 'animation-delay': `${animationDuration}s` }" /> 
+                    <AnimatedNumber :number="message.score" :delay="message.oldScore < message.score ? animationDuration * 2 : animationDuration" @animation-complete="$store.commit('updateOldScore', message)" />
+                    <span class="explain-score-button">
+                    <span class="text">why?</span>
+                </span>
+              </span>
+            </div>
+        </template>
+      </beautiful-chat>
+
+
+    </div>
 </template>
 
 <script>
@@ -55,6 +65,7 @@ export default {
   },
   data() {
     return {
+      displayOverlay: false,
       animationDuration: 1,
       titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
       showTypingIndicator: '', 
@@ -92,6 +103,12 @@ export default {
     newMessagesCount: state => state.newMessagesCount,
     participants: state => state.participants
   }),
+  
+  mounted() {
+    this.$store.commit('openChatWindow');
+
+  },
+
   methods: {
     sendMessage (text) {
       this.$store.commit('sendMessage', text);
@@ -109,7 +126,26 @@ export default {
       this.$store.commit('editMessage', message);
     },
     explainScore(message) {
+      //this.displayOverlay = true;
+      //let parentMessage = event.target.closest('.sc-message--text');
       this.$store.commit('explainScore', message);
+      //let r = event.target.getBoundingClientRect();
+      //let from = { width: r.width, height: r.height, bottom: r.bottom, top: r.top, right: r.right, left: r.left };
+     // let chatRect = document.querySelector('.sc-chat-window').getBoundingClientRect();
+      //let to = {  /* bottom: 0, top: 0, right: 0, left: 0, marginTop: '5vh',  marginLeft: '5vw', marginRight: '5vw',  width: '90vw', height: '90vh', */ duration: .25,  ease: "none" };
+
+      //let messageClone = parentMessage.cloneNode(true);
+     // let element = document.createElement('div');
+     // element.style.position = 'absolute';
+    //  element.style.zIndex = 1;
+      //element.className = "sc-message--text";
+     // element.style.backgroundColor = "blue";
+
+     // document.body.appendChild(element);
+
+      // eslint-disable-next-line no-undef
+     // gsap.fromTo(element, from, to);
+
     },
     updateOldScore(message) {
       this.$store.commit('updateOldScore', message);
@@ -119,6 +155,12 @@ export default {
 </script>
 
 <style lang="scss">
+#modal {
+  position: absolute;
+  z-index: 1;
+  background-color: rgb(78, 140, 255);
+  border-radius: 10px;
+}
 
 h3 {
   margin: 40px 0 0;
