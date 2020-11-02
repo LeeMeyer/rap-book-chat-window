@@ -1,5 +1,5 @@
 <template>  
-  <transition-group name="list-complete" tag="span" :style="{ '--word-transition-duration' : `${this.transitionDuration}s`} " :class="{ modal: morphToModal }" ref="words" > 
+  <transition-group :data-transitioned-words-id="id" name="list-complete" tag="span" :style="{ '--word-transition-duration' : `${this.transitionDuration}s`} " :class="{ modal: morphToModal }" ref="words" > 
     <span
       v-for="item in items"
       v-bind:key="item.id"
@@ -25,6 +25,9 @@ export default{
     morphToModal: {
       type: Boolean,
       default: false
+    },
+    id: {
+      type: String
     }
   },
   data() {
@@ -114,10 +117,6 @@ export default{
 
 .test div {
   display: inline-block;
-}
-
-.modal {
-  opacity: 0;
 }
 
 </style>

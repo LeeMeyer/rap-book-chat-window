@@ -1,7 +1,5 @@
 <template>
 <div>
-    <div ref="modal" id="modal"></div>
-
     <beautiful-chat ref="chat"
       :participants="participants"
       :titleImageUrl="titleImageUrl"
@@ -29,8 +27,7 @@
           </template>
           <template v-slot:text-message-body="{ message }">
             <div style="padding: 5px;">
-
-              <TransitionedWords :transitionedHtml="message.data.text" :transitionDuration="animationDuration" :morphToModal="!!message.scoreExplanation" />    
+              <TransitionedWords :id="message.id" :transitionedHtml="message.data.text" :transitionDuration="animationDuration" :morphToModal="!!message.scoreExplanation" />    
             </div>
               <div class="score-section animate__animated" :style="{ 'animation-delay': message.scoreAnimatedEntranceDelay }" :class="message.author == 'me' ? 'animate__lightSpeedInRight' : 'animate__lightSpeedInLeft'" @click="explainScore(message, $event)">
                   <span class="score">
@@ -43,8 +40,7 @@
             </div>
         </template>
       </beautiful-chat>
-
-
+      <ScoreExplanationModal/>
     </div>
 </template>
 
@@ -52,12 +48,15 @@
 import useRhymeHighlight from './use-rhyme-highlight';
 import TransitionedWords from './TransitionedWords'
 import AnimatedNumber from './AnimatedNumber'
+import ScoreExplanationModal from './ScoreExplanationModal';
 import { mapState } from 'vuex';
+
 
 export default {
   components: {
     TransitionedWords,
-    AnimatedNumber
+    AnimatedNumber,
+    ScoreExplanationModal
   },
   name: 'app',
   setup() {     
@@ -102,13 +101,10 @@ export default {
     isChatOpen: state => state.isChatOpen,
     newMessagesCount: state => state.newMessagesCount,
     participants: state => state.participants
-  }),
-  
+  }), 
   mounted() {
     this.$store.commit('openChatWindow');
-
   },
-
   methods: {
     sendMessage (text) {
       this.$store.commit('sendMessage', text);
