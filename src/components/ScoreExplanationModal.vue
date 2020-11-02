@@ -1,8 +1,11 @@
-<template>  
-  <!--<span class="modal" ref="modalWords">
-      {{ messageText }}
-</span>-->
-    <TransitionedWords class="modal" ref="modalWords" :transitionedHtml="messageText" :transitionDuration="transitionDuration" />    
+<template>
+    <div ref="modal" class="modal">
+        <div>
+            <div class="content" ref="content">
+                <TransitionedWords  ref="modalWords" :transitionedHtml="messageText" :transitionDuration="transitionDuration" />
+            </div>
+        </div>
+    </div>   
 </template>
 
 <script>
@@ -31,16 +34,26 @@ export default {
         let chatMessageElementToMorph = document.querySelector(`[data-transitioned-words-id=${this.messageForWhichToExplainScore.id}]`);
         let r = chatMessageElementToMorph.getBoundingClientRect();
         
-        let from = { width: r.width, height: r.height, bottom: r.bottom, top: r.top, right: r.right, left: r.left };
-    
-        this.messageText = this.messageForWhichToExplainScore.data.text; 
+        this.messageText = this.messageForWhichToExplainScore.data.text;
 
+        let from = { width: r.width, height: r.height, bottom: r.bottom, top: r.top, right: r.right, left: r.left, opacity: 1, fontSize: "100%" };
+
+        this.$refs.content.style.maxWidth = `${from.width}px`;
+    
         if (value) {
-            chatMessageElementToMorph.style.opacity = 0;
+            //chatMessageElementToMorph.style.opacity = 0;
             // eslint-disable-next-line no-undef
-            gsap.fromTo(this.$refs.modalWords.$el, from,  { duration: .5, fontSize: 20, left: 0, right: 0, bottom: 0, top: 0,  width: '100vw', height: '100vh', opacity: .6  });
+            gsap.fromTo(this.$refs.modal, from, { duration: .5, left: 0, right: 0, bottom: 0, top: 0,  width: '100vw', height: '100vh', backgroundColor: "rgba(78, 140, 255, .9)", onComplete: this.morphText  });
+            // eslint-disable-next-line no-undef
+            gsap.to('.content', { duation: .5, width: '40vw', maxWidth: 500, fontSize: '20px' }, 0);
         }
-    }
+    } 
+  },
+  methods: {
+      morphText() {
+          this.transitionDuration = 1; 
+          this.messageText = "Rhyming reaction and abstraction earns 10 points! \n Rhyming your and more scores 10 points! \n Rhyming account unmount scores 10 points! \n Rhyming opponent and component scores 10 points!";
+      }
   }
  };
 </script>
@@ -52,19 +65,26 @@ export default {
   font-size: 14px;
   line-height: 1.4;
   -webkit-font-smoothing: subpixel-antialiased;
-  position:fixed;
+  position: absolute;
   color: #fff;
   background-color: rgb(78, 140, 255); 
   display:inline-flex;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  position: fixed;
+  -webkit-overflow-scrolling: auto;
 }
 
-.modal div {
+
+
+.modal .content {
   display: inline-block;
 }
 
-.modal {
-    position: fixed;
+.break {
+  flex-basis: 100%;
+  height: 0;
 }
+
 </style>

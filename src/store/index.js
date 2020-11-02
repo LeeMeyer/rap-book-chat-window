@@ -10,7 +10,7 @@ export default new Vuex.Store({
     messageForWhichToExplainScore: null,
     scoreExplanantionModalIsOpen: false,
     messageList: [
-      { id: uniqid('message'), type: 'text', author: `me`, data: { text: `Say yes!` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' },
+      { id: uniqid('message'), type: 'text', author: `me`, data: { text: `my reaction to your abstraction it leaks more than a facebook account I'll do the lifecycle with your mum till she calls opponent component don't unmount` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' },
       { id: uniqid('message'), type: 'text', author: `user1`, data: { text: `No.` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' }
     ],
     participants: [
@@ -76,6 +76,10 @@ export default new Vuex.Store({
    /*   m.
 
       m.scoreExplanation = 'yes boss Say like a';*/
+    },
+    displayExplanation(state, message) {
+      const m = state.messageList.find(m=>m.id === message.id);
+      m.data.text = "yes!";
     }
   }
 })
