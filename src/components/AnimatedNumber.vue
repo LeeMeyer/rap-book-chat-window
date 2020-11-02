@@ -27,7 +27,7 @@ export default {
     watch: {
         number: function(newValue) {
             // eslint-disable-next-line no-undef
-            gsap.to(this.$data, { duration: 0.5, tweenedNumber: newValue, delay: this.delay, oncomplete: () => this.$emit('animation-complete')});
+            gsap.to(this.$data, { duration: 0.5, tweenedNumber: newValue, delay: this.delay, onComplete: () => this.$emit('animation-complete')});
         }
     }
 }

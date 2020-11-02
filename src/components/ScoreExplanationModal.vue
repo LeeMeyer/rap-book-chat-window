@@ -41,7 +41,6 @@ export default {
         this.$refs.content.style.maxWidth = `${from.width}px`;
     
         if (value) {
-            //chatMessageElementToMorph.style.opacity = 0;
             // eslint-disable-next-line no-undef
             gsap.fromTo(this.$refs.modal, from, { duration: .5, left: 0, right: 0, bottom: 0, top: 0,  width: '100vw', height: '100vh', backgroundColor: "rgba(78, 140, 255, .9)", onComplete: this.morphText  });
             // eslint-disable-next-line no-undef

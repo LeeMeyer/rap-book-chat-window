@@ -31,15 +31,15 @@ export default{
     }
   },
   data() {
-    return { 
-      items: this.transitionedHtml.split(' ').map(w => ({ id: uniqid(), word: w })),
+    return {  
+      items: this.transitionedHtml.split(' ').map((w, i) => ({ id: uniqid(i), word: w })),
       nextNum: 10 
     }
   },
   watch: {
     transitionedHtml(newValue) {
        let newWords = newValue.split(' ');
-       this.items = newWords.map(w => (this.items.find(other => other.word == w) || { id: uniqid(), word: w }));
+       this.items = newWords.map((w, i) => (newWords.lastIndexOf(w) === i && this.items.find(other => other.word === w)) || { id: uniqid(i), word: w });
     }
   }
  };
