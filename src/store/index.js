@@ -51,6 +51,12 @@ export default new Vuex.Store({
       }
     },
     onMessageWasSent(state, message) {
+      
+      message.id = uniqid("message");
+      message.oldScore = 0;
+      message.score = 0;
+      message.scoreAnimatedEntranceDelay = "0s";
+      message.scoreExplanation="";
       state.messageList = [ ...state.messageList, message ]
     },
     updateOldScore(state, message) 
