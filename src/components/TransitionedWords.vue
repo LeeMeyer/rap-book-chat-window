@@ -32,14 +32,14 @@ export default{
   },
   data() {
     return {  
-      items: this.transitionedHtml.split(' ').map((w, i) => ({ id: uniqid(i), word: w })),
+      items: this.transitionedHtml.split(' ').map(w => ({ id: uniqid(), word: w })),
       nextNum: 10 
     }
   },
   watch: {
     transitionedHtml(newValue) {
        let newWords = newValue.split(' ');
-       this.items = newWords.map((w, i) => (newWords.lastIndexOf(w) === i && this.items.find(other => other.word === w)) || { id: uniqid(i), word: w });
+       this.items = newWords.map((w, i) => (newWords.lastIndexOf(w) === i && this.items.find(other => other.word === w)) || { id: uniqid(), word: w });
     }
   }
  };
@@ -56,7 +56,7 @@ export default{
 }
 
 .list-complete-enter, .list-complete-leave-to
-/* .list-complete-leave-active below version 2.1.8 */ {
+{
   opacity: 0;
   transform: translateY(30px);
 }
