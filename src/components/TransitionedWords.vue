@@ -3,7 +3,7 @@
     <span
       v-for="item in items"
       v-bind:key="item.id"
-      class="list-complete-item" :class="{ newline: item.word == '\n' }"
+      class="list-complete-item" :class="{ newline: item.word === '\n', word: !item.word.match(/^\W+$/g)  }"
     >{{item.word}}</span>
   </transition-group>
 </template>
@@ -28,14 +28,24 @@ export default{
   },
   data() {
     return {  
-      items: this.transitionedHtml.split(' ').map(w => ({ id: uniqid(), word: w })),
+      items: this.tokenize(this.transitionedHtml).map(w => ({ id: uniqid(), word: w })),
       nextNum: 10 
     }
   },
   watch: {
     transitionedHtml(newValue) {
-       let newWords = newValue.split(' ');
-       this.items = newWords.map((w, i) => (newWords.lastIndexOf(w) === i && this.items.find(other => other.word === w)) || { id: uniqid(), word: w });
+       let newWords = this.tokenize(newValue);
+       let oldItems = [...this.items];
+       console.log(JSON.stringify(oldItems));
+       let newItems = newWords.map(w => (oldItems.find(old => old.word === w) && oldItems.splice(oldItems.findIndex(old => old.word === w), 1)[0]) || { id: uniqid(), word: w });
+       console.log(newItems.filter(w => !w.word))
+       this.items = newItems;
+    }
+  },
+  methods: {
+    tokenize(s) {
+      let tokens = s.match(/(\w|'|<|>|\/)+|\s+|\W/g) || [];
+      return tokens.map(t => t.toLowerCase() === '<br>' ? "\n" : t);
     }
   }
  };
@@ -47,7 +57,7 @@ export default{
   display: inline-block;
 }
 
-.list-complete-item::after {
+.word::before {
   content: '\a0';
 }
 

@@ -31,7 +31,7 @@
             </div>
               <div class="score-section animate__animated" :style="{ 'animation-delay': message.scoreAnimatedEntranceDelay }" :class="message.author == 'me' ? 'animate__lightSpeedInRight' : 'animate__lightSpeedInLeft'" @click="explainScore(message, $event)">
                   <span class="score">
-                    <span class="rap-star animate__animated" :class="{ animate__heartBeat: message.oldScore < message.score }" :style="{ 'animation-delay': `${animationDuration}s` }" /> 
+                    <span class="rap-star animate__animated" :class="{ animate__bounce: message.oldScore < message.score }" :style="{ 'animation-delay': `${animationDuration}s` }" /> 
                     <AnimatedNumber :number="message.score" :delay="message.oldScore < message.score ? animationDuration * 2 : animationDuration" @animation-complete="$store.commit('updateOldScore', message)" />
                     <span class="explain-score-button">
                     <span class="text">why?</span>
