@@ -4,7 +4,9 @@
       v-for="item in items"
       v-bind:key="item.id"
       class="list-complete-item" :class="{ newline: item.word === '\n', word: !item.word.match(/^\W+$/g)  }"
-    >{{item.word}}</span>
+      v-html="(allowHtml && item.word) || ''"
+      v-text="(!allowHtml && item.word) || ''">
+    </span>
   </transition-group>
 </template>
 
@@ -24,6 +26,10 @@ export default{
     },
     id: {
       type: String
+    },
+    allowHtml: {
+      type: Boolean, 
+      default: false
     }
   },
   data() {
@@ -36,9 +42,7 @@ export default{
     transitionedHtml(newValue) {
        let newWords = this.tokenize(newValue);
        let oldItems = [...this.items];
-       console.log(JSON.stringify(oldItems));
        let newItems = newWords.map(w => (oldItems.find(old => old.word === w) && oldItems.splice(oldItems.findIndex(old => old.word === w), 1)[0]) || { id: uniqid(), word: w });
-       console.log(newItems.filter(w => !w.word))
        this.items = newItems;
     }
   },
