@@ -89,14 +89,7 @@ export default {
   -webkit-overflow-scrolling: auto;
 }
 
-
-
 .modal .content {
   display: inline-block;
-}
-
-.break {
-  flex-basis: 100%;
-  height: 0;
 }
 </style>
