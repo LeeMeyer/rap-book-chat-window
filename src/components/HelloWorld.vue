@@ -40,7 +40,7 @@
             </div>
         </template>
       </beautiful-chat>
-      <ScoreExplanationModal/>
+      <ScoreExplanationModal />
     </div>
 </template>
 
@@ -100,7 +100,8 @@ export default {
     messageList: state => state.messageList,
     isChatOpen: state => state.isChatOpen,
     newMessagesCount: state => state.newMessagesCount,
-    participants: state => state.participants
+    participants: state => state.participants,
+    scoreExplanantionModalIsOpen: state => state.scoreExplanantionModalIsOpen
   }), 
   mounted() {
     this.$store.commit('openChatWindow');
