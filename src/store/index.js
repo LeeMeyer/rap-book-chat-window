@@ -76,8 +76,9 @@ export default new Vuex.Store({
 
       const m = state.messageList.find(m=>m.id === message.id);
 
-      state.messageForWhichToExplainScore = m;
+      
       state.scoreExplanantionModalIsOpen = true;
+      state.messageForWhichToExplainScore = m;
   
    /*   m.
 

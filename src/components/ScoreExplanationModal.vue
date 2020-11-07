@@ -33,34 +33,43 @@ export default {
   }),
   watch: {
     scoreExplanantionModalIsOpen(value) {
-        this.removeElement = false;
-
-        let chatMessageElementToMorph = document.querySelector(`[data-transitioned-words-id=${this.messageForWhichToExplainScore.id}]`);
-        let r = chatMessageElementToMorph.getBoundingClientRect();
         
-        this.messageText = this.messageForWhichToExplainScore.data.text;
-        chatMessageElementToMorph.style.opacity = 0;
-
-        let from = { width: r.width, height: r.height, bottom: r.bottom, top: r.top, right: r.right, left: r.left, opacity: 1 };
-
-        this.$refs.content.style.maxWidth = `${from.width}px`;
-    
-        if (value) {
-            // eslint-disable-next-line no-undef
-            gsap.fromTo(this.$refs.modal, from, { duration: .5, left: 0, right: 0, bottom: 0, top: 0,  width: '100vw', height: '100vh', backgroundColor: "rgba(78, 140, 255, .9)", onComplete: this.morphText });
-            // eslint-disable-next-line no-undef
-            gsap.to(this.$refs.content, { duation: .5, width: '40vw', maxWidth: 500, fontSize: '20px' }, 0);
-        }
-        else {
-          // eslint-disable-next-line no-undef 
-          gsap.to(this.$refs.modal, { ...from, onComplete: () => chatMessageElementToMorph.style.opacity = 1 } );
-           // eslint-disable-next-line no-undef           
-          gsap.to(this.$refs.content, { duation: .5, fontSize: '14px', width: "100vw", maxWidth: r.width }, 0);
-
-          this.transitionDuration = .5;
+        if (this.messageForWhichToExplainScore) 
+        {
+          let chatMessageElementToMorph = document.querySelector(`[data-transitioned-words-id=${this.messageForWhichToExplainScore.id}]`);
+          let r = chatMessageElementToMorph.getBoundingClientRect();
+          
           this.messageText = this.messageForWhichToExplainScore.data.text;
+          chatMessageElementToMorph.style.opacity = 0;
+
+          let from = { width: r.width, height: r.height, bottom: r.bottom, top: r.top, right: r.right, left: r.left, opacity: 1 };
+
+          this.$refs.content.style.maxWidth = `${from.width}px`;
+      
+          if (value) {
+              // eslint-disable-next-line no-undef
+              gsap.fromTo(this.$refs.modal, from, { left: 0, right: 0, bottom: 0, top: 0,  width: '100vw', height: '100vh', backgroundColor: "rgba(78, 140, 255, .9)", onComplete: this.morphText });
+              // eslint-disable-next-line no-undef
+              gsap.to(this.$refs.content, { width: '40vw', maxWidth: 500, fontSize: '20px' }, 0);
+          }
+          else {
+            // eslint-disable-next-line no-undef 
+            gsap.to(this.$refs.modal, { ...from, onComplete: () => chatMessageElementToMorph.style.opacity = 1  } );
+            // eslint-disable-next-line no-undef           
+            gsap.to(this.$refs.content, { fontSize: '14px', width: "100vw", maxWidth: r.width }, 0);
+
+            this.transitionDuration = .5;
+            this.messageText = this.messageForWhichToExplainScore.data.text;
+          }
         }
-    } 
+      
+    },
+    messageForWhichToExplainScore(value, oldValue) {
+      if (oldValue && oldValue != value)
+      {
+        document.querySelector(`[data-transitioned-words-id=${oldValue.id}]`).style.opacity = 1;
+      }
+    }
   },
   methods: {
       morphText() {
