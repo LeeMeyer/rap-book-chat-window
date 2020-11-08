@@ -65,7 +65,7 @@ import AnimatedNumber from './AnimatedNumber'
 import ScoreExplanationModal from './ScoreExplanationModal';
 
 
-let code2 = `export default  {
+let code2 = `let useRhymeHighlighter = function()  {
     const colorsSeed = uniqid();
     let chat = ref(null);
 
@@ -100,7 +100,16 @@ let code2 = `export default  {
     });\n
 
     return { mounted, chat, updateHighlights }
-}`;
+}
+\n\n
+//this is the component JS
+export default {
+  name: 'RhymeHighlight',
+  setup() {
+    return useRhymeHighlighter()
+  }
+};
+`;
 
 let code = `export default {
   name: 'RhymeHighlight',
@@ -160,6 +169,8 @@ export default {
       animationDuration: 1,
       titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
       showTypingIndicator: '',
+      
+      refactored: false,
       colors: {
         header: {
           bg: '#4e8cff',
@@ -242,6 +253,7 @@ export default {
     },
     changeCode() {
       this.codeness = Prism.highlight(code2.replaceAll("=>", "=˃"), Prism.languages.javascript, 'javascript');
+      this.refactored = true;
     }
   }
 }
@@ -315,8 +327,11 @@ a {
 pre { 
   background: #2d2d2d;
   color: white;
+  border-radius: 5px;
+  width: 90vw;
+  margin-left: 5vw;
   overflow: auto;
-  width: 60vw;
 }
+
 
 </style>
