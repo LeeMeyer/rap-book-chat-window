@@ -1,5 +1,15 @@
 <template>
-<div>
+<div>  
+
+
+    <button @click="changeCode">test time</button>
+
+     <pre>
+       <code>
+        <TransitionedWords :transitionedHtml="codeness" :allowHtml="true" /> 
+       </code>    
+     </pre>
+
     <beautiful-chat ref="chat"
       :participants="participants"
       :titleImageUrl="titleImageUrl"
@@ -22,16 +32,15 @@
       :disableUserListToggle="false"
       :messageStyling="messageStyling"  
       @edit="editMessage" >
-
       <template v-slot:header>
           </template>
           <template v-slot:text-message-body="{ message }">
             <div style="padding: 5px;">
-              <TransitionedWords  :id="message.id" :transitionedHtml="message.data.text" :transitionDuration="animationDuration" :morphToModal="!!message.scoreExplanation" />    
+              <TransitionedWords :id="message.id" :transitionedHtml="message.data.text" :transitionDuration="animationDuration" />    
             </div>
               <div class="score-section animate__animated" :style="{ 'animation-delay': message.scoreAnimatedEntranceDelay }" :class="message.author == 'me' ? 'animate__lightSpeedInRight' : 'animate__lightSpeedInLeft'" @click="explainScore(message, $event)">
                   <span class="score">
-                    <span class="rap-star animate__animated" :class="{ animate__bounce: message.oldScore < message.score }" :style="{ 'animation-delay': `${animationDuration}s` }" /> 
+                    <span class="rap-star animate__animated" :class="{ animate__flip: message.oldScore < message.score }" :style="{ 'animation-delay': `${animationDuration}s` }" /> 
                     <AnimatedNumber :number="message.score" :delay="message.oldScore < message.score ? animationDuration * 2 : animationDuration" @animation-complete="$store.commit('updateOldScore', message)" />
                     <span class="explain-score-button">
                     <span class="text">why?</span>
@@ -45,11 +54,94 @@
 </template>
 
 <script>
+/*eslint-disable*/
+import { mapState } from 'vuex';
+import Prism from 'prismjs';
+import 'prismjs/themes/prism-tomorrow.css'
+
 import useRhymeHighlight from './use-rhyme-highlight';
 import TransitionedWords from './TransitionedWords'
 import AnimatedNumber from './AnimatedNumber'
 import ScoreExplanationModal from './ScoreExplanationModal';
-import { mapState } from 'vuex';
+
+
+let code2 = `export default  {
+    const colorsSeed = uniqid();
+    let chat = ref(null);
+
+
+    let updateHighlights = function() {
+      let myInput = chat.value.$el.querySelector('[contenteditable=true]');
+      let rhymeMarker = new marker(myInput);
+      let rhymeGroups = rhymeDetector(myInput.innerText);
+      let colors = colourer({ luminosity: 'light', count: rhymeGroups.length, seed: colorsSeed });
+      let rhymeStyles = {};
+
+      colors.forEach((color, i) => {
+        rhymeStyles[\'rhyme-group-\${{i}}\'] = { 'background-color': color };
+      });
+
+      const sheet = styler.createStyleSheet(rhymeStyles)
+      sheet.attach();\n\n
+      let savedSel = ranger.saveSelection();
+          rhymeMarker.unmark({
+            done: () => {
+              rhymeGroups.forEach((group, i) =>
+                rhymeMarker.mark(group.join(' '), { accuracy: { value: "exactly", limiters: [",", ".", "-", "\"", "'", "!", "?", "_", "@"] }, className: sheet.classes[\'rhyme-group-\${i}\'] }));
+                ranger.restoreSelection(savedSel, true);
+            }
+          });
+    };\n
+
+    let mounted = onMounted(() => {
+      let input = chat.value.$el.querySelector('[contenteditable=true]');
+      input.addEventListener('input', updateHighlights);
+      input.addEventListener('focus', () => setTimeout(updateHighlights, 50));
+    });\n
+
+    return { mounted, chat, updateHighlights }
+}`;
+
+let code = `export default {
+  name: 'RhymeHighlight',
+    props: {
+    content: {
+      default: '',
+      type: String,
+    },
+  },
+  mounted() {
+   this.markInstance = new mark(this.$refs.myInput);
+   this.updateHighlights();
+   this.colorsSeed = uniqid();
+  },
+  methods: {
+    updateHighlights()\n
+    {
+      let rhymeGroups = findRhymes(this.text() || '');\n
+      let colors = randomColor({
+        luminosity: 'light',
+        count: rhymeGroups.length,
+        seed: this.colorsSeed
+      });
+
+      let rhymeStyles = {};\n\n
+      colors.forEach((color, index) => {
+        rhymeStyles['rhyme-group-\${index}'] = { 'background-color': color };
+      });\n
+      const sheet = jss.createStyleSheet(rhymeStyles)
+      sheet.attach();
+      let savedSel = rangy.saveSelection();\n
+      this.markInstance.unmark({
+        done: () => {
+          rhymeGroups.forEach((group, i) =>
+             this.markInstance.mark(group.join(' '), { accuracy: { value: "exactly", limiters: [",", ".", "-", "\"", "'", "!", "?", "_", "@"] }, className: sheet.classes['rhyme-group-\${i}'] }));\n
+          rangy.restoreSelection(savedSel, true);
+        }
+      });
+    }
+  }
+};`;
 
 
 export default {
@@ -67,7 +159,7 @@ export default {
       displayOverlay: false,
       animationDuration: 1,
       titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
-      showTypingIndicator: '', 
+      showTypingIndicator: '',
       colors: {
         header: {
           bg: '#4e8cff',
@@ -93,7 +185,8 @@ export default {
         }
       }, 
       alwaysScrollToBottom: true, 
-      messageStyling: true 
+      messageStyling: true,
+      codeness: Prism.highlight(code.replaceAll("=>", "=˃").replaceAll("`", '\''), Prism.languages.javascript, 'javascript')
     }
   },
   computed: mapState({
@@ -104,7 +197,7 @@ export default {
     messageForWhichToExplainScore: state => state.messageForWhichToExplainScore 
   }), 
   mounted() {
-    this.$store.commit('openChatWindow');
+    //this.$store.commit('openChatWindow');
   },
   methods: {
     sendMessage (text) {
@@ -146,18 +239,15 @@ export default {
     },
     updateOldScore(message) {
       this.$store.commit('updateOldScore', message);
+    },
+    changeCode() {
+      this.codeness = Prism.highlight(code2.replaceAll("=>", "=˃"), Prism.languages.javascript, 'javascript');
     }
   }
 }
 </script>
 
 <style lang="scss">
-#modal {
-  position: absolute;
-  z-index: 1;
-  background-color: rgb(78, 140, 255);
-  border-radius: 10px;
-}
 
 h3 {
   margin: 40px 0 0;
@@ -220,6 +310,12 @@ a {
 
 .explain-score-button::after {
   content: ')'
+}
+
+pre { 
+  background: #2d2d2d;
+  color: white;
+  overflow: auto;
 }
 
 </style>

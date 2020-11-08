@@ -15,6 +15,7 @@
     "jss": "^10.4.0",
     "log4javascript": "^1.4.15",
     "mark.js": "^8.11.1",
+    "prismjs": "^1.22.0",
     "randomcolor": "^0.6.2",
     "rangy": "^1.3.0",
     "rangy-selectionsaverestore": "^2.1.0",

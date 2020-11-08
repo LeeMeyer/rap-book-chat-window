@@ -76,7 +76,7 @@ export default {
   methods: {
       morphText() {
           this.transitionDuration = 1; 
-          this.messageText = "Rhyming reaction and abstraction earns 10 points! <br> Rhyming your and more scores 10 points! <br> Rhyming account unmount scores 10 points! <br> Rhyming opponent and component scores 10 points!";
+          this.messageText = "Rhyming reaction and abstraction earns 10 points \r\n Rhyming your and more scores 10 points \r\n Rhyming account unmount scores 10 points \r\n Rhyming opponent and component scores 10 points";
       }
   }
  };
