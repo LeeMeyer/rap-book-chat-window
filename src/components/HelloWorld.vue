@@ -316,6 +316,7 @@ pre {
   background: #2d2d2d;
   color: white;
   overflow: auto;
+  width: 60vw;
 }
 
 </style>
