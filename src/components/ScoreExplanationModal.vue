@@ -78,7 +78,7 @@ export default {
   methods: {
       morphText() {
           this.transitionDuration = 1; 
-          this.messageText = 'Rhyming "reaction" and "abstraction" earns 10 points!\n Rhyming your and more scores 10 points\n Rhyming account unmount scores 10 points\n Rhyming opponent and component scores 10 points';
+          this.messageText = this.$store.getters.getScoreExplanation;
       }
   }
  };

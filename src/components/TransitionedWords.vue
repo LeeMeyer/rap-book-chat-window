@@ -53,9 +53,9 @@ export default{
 
        for(let match of matches) {
           let { prefix, word, suffix } = match.groups;
-          tokens.push({ prefix: prefix || '', word, suffix: suffix || '', id: uniqid() });
+          tokens.push({ prefix: prefix || '', word, suffix: suffix.trim() || '', id: uniqid() });
           
-          if (suffix === '\n') {
+          if (suffix.indexOf('\n') > -1) {
             tokens.push({ prefix: '', word: '', suffix: '', isNewline: true, id: uniqid() })
           }
        }

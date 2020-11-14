@@ -91,5 +91,11 @@ export default new Vuex.Store({
     closeScoreExplantion(state) {
       state.scoreExplanantionModalIsOpen = false;
     }
+  },
+  getters: {
+    getScoreExplanation: (state) => {
+       let rhymeGroups = detectRhymes(state.messageForWhichToExplainScore.data.text);
+       return rhymeGroups.reduce((a, c) => a + `Rhyming ${c.map(w => `"${w}"`).join(' and ')} scores ${c.length * 10} points!\n \n`, '');
+    }
   }
 })
