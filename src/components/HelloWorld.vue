@@ -6,7 +6,7 @@
 
      <pre>
        <code>
-        <TransitionedWords :transitionedHtml="codeness" :allowHtml="true" /> 
+<!--        <TransitionedWords :transitionedHtml="codeness" :allowHtml="true" />  -->
        </code>    
      </pre>
 
@@ -208,7 +208,7 @@ export default {
     messageForWhichToExplainScore: state => state.messageForWhichToExplainScore 
   }), 
   mounted() {
-    //this.$store.commit('openChatWindow');
+    this.$store.commit('openChatWindow');
   },
   methods: {
     sendMessage (text) {
