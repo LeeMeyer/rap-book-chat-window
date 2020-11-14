@@ -3,14 +3,12 @@
     <span
       v-for="item in items"
       :key="item.id"
-      class="list-complete-item" :class="{ newline: item.word.indexOf('\n') > -1, word: !allowHtml }">
-      <span v-if="allowHtml" v-html="item.prefix + item.word + item.suffix"></span>
-      <span v-else v-text="item.prefix + item.word + item.suffix">
-      </span>
-    </span>
+      class="list-complete-item" :class="{ word: !allowHtml, newline: item.isNewline }">
+      <span v-if="allowHtml" v-html="item.prefix + item.word + item.suffix"/>
+      <span v-else v-text="item.prefix + item.word + item.suffix"></span>
+    </span>    
   </transition-group>
 </template>
-
 <script>
 
 const uniqid = require('uniqid');
@@ -48,12 +46,16 @@ export default{
   },
   methods: {
     tokenize(s) {
-       let matches = s.matchAll(/(?<prefix>[^\w\s]*)(?<word>[\w'-]+)(?<suffix>[^\w\s]*)/g);
+       let matches = s.matchAll(/(?<prefix>[^\w\s]*)(?<word>[\w'-]+)(?<suffix>([^\w\s]|\n)*)/g);
        let tokens = [];
 
        for(let match of matches) {
           let { prefix, word, suffix } = match.groups;
           tokens.push({ prefix, word, suffix, id: uniqid() });
+          
+          if (suffix === '\n') {
+            tokens.push({ prefix: '', word: '', suffix: '', isNewline: true, id: uniqid() })
+          }
        }
 
        return tokens;
@@ -62,14 +64,14 @@ export default{
  };
 </script>
 
-<style scoped>
+<style>
 .list-complete-item {
   transition: all var(--word-transition-duration);
   display: inline-block;
   height: 3px;
 }
 
-.word::after {
+.word::before {
   content: '\a0';
 }
 
