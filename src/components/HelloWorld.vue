@@ -6,7 +6,7 @@
 
      <pre>
        <code>
-<!--        <TransitionedWords :transitionedHtml="codeness" :allowHtml="true" />  -->
+          <TransitionedWords :transitionedHtml="codeness" :allowHtml="true" /> 
        </code>    
      </pre>
 
@@ -57,7 +57,7 @@
 /*eslint-disable*/
 import { mapState } from 'vuex';
 import Prism from 'prismjs';
-import 'prismjs/themes/prism-tomorrow.css'
+import 'prismjs/themes/prism-solarizedlight.css'
 
 import useRhymeHighlight from './use-rhyme-highlight';
 import TransitionedWords from './TransitionedWords'
@@ -69,20 +69,20 @@ let code2 = `let useRhymeHighlighter = function()  {
     const colorsSeed = uniqid();
     let chat = ref(null);
 
-
     let updateHighlights = function() {
       let myInput = chat.value.$el.querySelector('[contenteditable=true]');
       let rhymeMarker = new marker(myInput);
       let rhymeGroups = rhymeDetector(myInput.innerText);
       let colors = colourer({ luminosity: 'light', count: rhymeGroups.length, seed: colorsSeed });
       let rhymeStyles = {};
-
+      
       colors.forEach((color, i) => {
         rhymeStyles[\'rhyme-group-\${{i}}\'] = { 'background-color': color };
       });
-
-      const sheet = styler.createStyleSheet(rhymeStyles)
-      sheet.attach();\n\n
+      
+      const sheet = styler.createStyleSheet(rhymeStyles);
+      sheet.attach();
+      
       let savedSel = ranger.saveSelection();
           rhymeMarker.unmark({
             done: () => {
@@ -91,17 +91,18 @@ let code2 = `let useRhymeHighlighter = function()  {
                 ranger.restoreSelection(savedSel, true);
             }
           });
-    };\n
-
+    };
+    
     let mounted = onMounted(() => {
       let input = chat.value.$el.querySelector('[contenteditable=true]');
       input.addEventListener('input', updateHighlights);
       input.addEventListener('focus', () => setTimeout(updateHighlights, 50));
-    });\n
-
-    return { mounted, chat, updateHighlights }
+    });
+    
+    return { mounted, chat, updateHighlights };
 }
-\n\n
+
+
 //this is the component JS
 export default {
   name: 'RhymeHighlight',
@@ -125,26 +126,29 @@ let code = `export default {
    this.colorsSeed = uniqid();
   },
   methods: {
-    updateHighlights()\n
+    updateHighlights()
     {
-      let rhymeGroups = findRhymes(this.text() || '');\n
+      let rhymeGroups = findRhymes(this.text() || '');
       let colors = randomColor({
         luminosity: 'light',
         count: rhymeGroups.length,
         seed: this.colorsSeed
       });
-
-      let rhymeStyles = {};\n\n
+      
+      let rhymeStyles = {};
+      
+      
       colors.forEach((color, index) => {
-        rhymeStyles['rhyme-group-\${index}'] = { 'background-color': color };
-      });\n
-      const sheet = jss.createStyleSheet(rhymeStyles)
+        rhymeStyles['rhyme-group-\${index}'] = { 'background-color': color }
+      });
+      
+      const sheet = jss.createStyleSheet(rhymeStyles);
       sheet.attach();
-      let savedSel = rangy.saveSelection();\n
+      let savedSel = rangy.saveSelection();
       this.markInstance.unmark({
         done: () => {
           rhymeGroups.forEach((group, i) =>
-             this.markInstance.mark(group.join(' '), { accuracy: { value: "exactly", limiters: [",", ".", "-", "\"", "'", "!", "?", "_", "@"] }, className: sheet.classes['rhyme-group-\${i}'] }));\n
+             this.markInstance.mark(group.join(' '), { accuracy: { value: "exactly", limiters: [",", ".", "-", "\"", "'", "!", "?", "_", "@"] }, className: sheet.classes['rhyme-group-\${i}'] }));
           rangy.restoreSelection(savedSel, true);
         }
       });
@@ -324,14 +328,12 @@ a {
   content: ')'
 }
 
-pre { 
-  background: #2d2d2d;
-  color: white;
-  border-radius: 5px;
-  width: 90vw;
-  margin-left: 5vw;
-  overflow: auto;
+pre {
+ 
+  background: rgba(76, 175, 80, 0.1);
+  margin: 20px;
+  padding: 20px;
+  padding-top: 0;
 }
-
 
 </style>
