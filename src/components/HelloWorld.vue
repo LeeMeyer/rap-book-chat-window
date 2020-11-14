@@ -25,7 +25,7 @@
       :showDeletion="false"
       :deletionConfirmation="false"
       :showTypingIndicator="showTypingIndicator"
-      :showLauncher="false"
+      :showLauncher="true"
       :showCloseButton="true"
       :colors="colors"
       :alwaysScrollToBottom="true"

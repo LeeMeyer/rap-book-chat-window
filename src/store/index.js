@@ -72,17 +72,9 @@ export default new Vuex.Store({
       m.score += 5;
     },
     explainScore(state, message) {
-      //message.data.text = 'yes boss Say like a';
-
       const m = state.messageList.find(m=>m.id === message.id);
-
-      
       state.scoreExplanantionModalIsOpen = true;
       state.messageForWhichToExplainScore = m;
-  
-   /*   m.
-
-      m.scoreExplanation = 'yes boss Say like a';*/
     },
     closeScoreExplantion(state) {
       state.scoreExplanantionModalIsOpen = false;

@@ -42,13 +42,15 @@ export default {
           this.messageText = this.messageForWhichToExplainScore.data.text;
           chatMessageElementToMorph.style.opacity = 0;
 
-          let color = this.messageForWhichToExplainScore.author === "me" ? "#fff" : "#000"
-          let from = { width: r.width, height: r.height, bottom: r.bottom, top: r.top, right: r.right, left: r.left, opacity: 1, color: color };
+          let color = this.messageForWhichToExplainScore.author === "me" ? "#fff" : "#000";
+
+          let backgroundColor = this.messageForWhichToExplainScore.author === "me" ? "rgba(78, 140, 255, .8)" : "rgba(234, 234, 234, .8)";
+          
+          let from = { width: r.width, height: r.height, bottom: r.bottom, top: r.top, right: r.right, left: r.left, opacity: 1, color: color, backgroundColor: backgroundColor.replace('.8', '1') };
 
           this.$refs.content.style.maxWidth = `${from.width}px`;
-      
+
           if (value) {
-              let backgroundColor = this.messageForWhichToExplainScore.author === "me" ? "rgba(78, 140, 255, .8)" : "rgb(234, 234, 234, .8)";
           
               // eslint-disable-next-line no-undef
               gsap.fromTo(this.$refs.modal, from, { left: 0, right: 0, bottom: 0, top: 0,  width: '100vw', height: '100vh', backgroundColor: backgroundColor, onComplete: this.morphText });
