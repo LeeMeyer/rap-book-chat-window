@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import uniqid from 'uniqid';
+import detectRhymes from 'rhyme-detector';
 
 Vue.use(Vuex);
 
@@ -10,8 +11,8 @@ export default new Vuex.Store({
     messageForWhichToExplainScore: null,
     scoreExplanantionModalIsOpen: false,
     messageList: [
-      { id: uniqid('message'), type: 'text', author: `me`, data: { text: `my reaction to your abstraction it leaks more than a facebook account I'll do the lifecycle with your mum till she calls opponent component don't unmount` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' },
-      { id: uniqid('message'), type: 'text', author: `user1`, data: { text: `No.` }, score: 65, oldScore: 65, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' }
+      { id: uniqid('message'), type: 'text', author: `me`, data: { text: `my reaction to your abstraction it leaks more than a facebook account I'll do the lifecycle with your mum till she calls opponent component don't unmount` }, score: 0, oldScore: 0, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' },
+      { id: uniqid('message'), type: 'text', author: `user1`, data: { text: `No.` }, score: 0, oldScore: 0, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' }
     ],
     participants: [
       {
@@ -27,6 +28,13 @@ export default new Vuex.Store({
     ]
   },
   mutations: {
+    init(state) {
+      state.messageList.forEach(m => {
+        let score = detectRhymes(m.data.text).flat().length * 10;
+        m.score = score;
+        m.oldScore = score;
+      });
+    },
     openChatWindow(state) {
       
       state.isChatOpen = true
@@ -53,8 +61,12 @@ export default new Vuex.Store({
     onMessageWasSent(state, message) {
       
       message.id = uniqid("message");
-      message.oldScore = 0;
-      message.score = 0;
+
+      let rhymeGroups = detectRhymes(message.data.text);
+      let score = rhymeGroups.flat().length * 10;
+      
+      message.oldScore = score;
+      message.score = score;
       message.scoreAnimatedEntranceDelay = "0s";
       message.scoreExplanation="";
       state.messageList = [ ...state.messageList, message ]
@@ -69,7 +81,7 @@ export default new Vuex.Store({
       m.oldScore = m.score;
       m.isEdited = true;
       m.data.text = message.data.text;
-      m.score += 5;
+      m.score = detectRhymes(message.data.text).flat().length * 10;
     },
     explainScore(state, message) {
       const m = state.messageList.find(m=>m.id === message.id);
@@ -78,7 +90,6 @@ export default new Vuex.Store({
     },
     closeScoreExplantion(state) {
       state.scoreExplanantionModalIsOpen = false;
-
     }
   }
 })

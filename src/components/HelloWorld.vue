@@ -40,7 +40,7 @@
             </div>
               <div class="score-section animate__animated" :style="{ 'animation-delay': message.scoreAnimatedEntranceDelay }" :class="message.author == 'me' ? 'animate__lightSpeedInRight' : 'animate__lightSpeedInLeft'" @click="explainScore(message, $event)">
                   <span class="score">
-                    <span class="rap-star animate__animated" :class="{ animate__flip: message.oldScore < message.score }" :style="{ 'animation-delay': `${animationDuration}s` }" /> 
+                    <span class="rap-star animate__animated" :class="{ animate__bounce: message.oldScore < message.score }" :style="{ 'animation-delay': `${animationDuration}s` }" /> 
                     <AnimatedNumber :number="message.score" :delay="message.oldScore < message.score ? animationDuration * 2 : animationDuration" @animation-complete="$store.commit('updateOldScore', message)" />
                     <span class="explain-score-button">
                     <span class="text">why?</span>
@@ -76,7 +76,7 @@ let code2 = `let useRhymeHighlighter = function()  {
       let colors = colourer({ luminosity: 'light', count: rhymeGroups.length, seed: colorsSeed });
       let rhymeStyles = {};
       
-      colors.forEach((color, i) => {
+      colors.forEach((color, i) =˃ {
         rhymeStyles[\'rhyme-group-\${{i}}\'] = { 'background-color': color };
       });
       
@@ -156,7 +156,6 @@ let code = `export default {
   }
 };`;
 
-
 export default {
   components: {
     TransitionedWords,
@@ -201,7 +200,7 @@ export default {
       }, 
       alwaysScrollToBottom: true, 
       messageStyling: true,
-      codeness: Prism.highlight(code.replaceAll("=>", "=˃").replaceAll("`", '\''), Prism.languages.javascript, 'javascript')
+      codeness: Prism.highlight(code, Prism.languages.javascript, 'javascript')
     }
   },
   computed: mapState({
@@ -212,6 +211,7 @@ export default {
     messageForWhichToExplainScore: state => state.messageForWhichToExplainScore 
   }), 
   mounted() {
+    this.$store.commit('init');
     this.$store.commit('openChatWindow');
   },
   methods: {
@@ -230,34 +230,15 @@ export default {
     editMessage(message){
       this.$store.commit('editMessage', message);
     },
-    explainScore(message) {
-      //this.displayOverlay = true;
-      //let parentMessage = event.target.closest('.sc-message--text');
-      this.$store.commit('explainScore', message);
-      //let r = event.target.getBoundingClientRect();
-      //let from = { width: r.width, height: r.height, bottom: r.bottom, top: r.top, right: r.right, left: r.left };
-     // let chatRect = document.querySelector('.sc-chat-window').getBoundingClientRect();
-      //let to = {  /* bottom: 0, top: 0, right: 0, left: 0, marginTop: '5vh',  marginLeft: '5vw', marginRight: '5vw',  width: '90vw', height: '90vh', */ duration: .25,  ease: "none" };
-
-      //let messageClone = parentMessage.cloneNode(true);
-     // let element = document.createElement('div');
-     // element.style.position = 'absolute';
-    //  element.style.zIndex = 1;
-      //element.className = "sc-message--text";
-     // element.style.backgroundColor = "blue";
-
-     // document.body.appendChild(element);
-
-      // eslint-disable-next-line no-undef
-     // gsap.fromTo(element, from, to);
-
-    },
     updateOldScore(message) {
       this.$store.commit('updateOldScore', message);
     },
     changeCode() {
       this.codeness = Prism.highlight(code2.replaceAll("=>", "=˃"), Prism.languages.javascript, 'javascript');
       this.refactored = true;
+    },
+    explainScore(message) {
+      this.$store.commit('explainScore', message);
     }
   }
 }

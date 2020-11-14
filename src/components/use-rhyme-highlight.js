@@ -19,7 +19,6 @@ export default function()
       let rhymeMarker = new marker(myInput);
       let rhymeGroups = rhymeDetector(myInput.innerText);
 
-
       let colors = colourer({ luminosity: 'light', count: rhymeGroups.length, seed: colorsSeed });
 
       let rhymeStyles = {};
