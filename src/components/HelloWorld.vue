@@ -68,7 +68,7 @@ import ScoreExplanationModal from './ScoreExplanationModal';
 let code2 = `let useRhymeHighlighter = function()  {
     const colorsSeed = uniqid();
     let chat = ref(null);
-
+    
     let updateHighlights = function() {
       let myInput = chat.value.$el.querySelector('[contenteditable=true]');
       let rhymeMarker = new marker(myInput);
