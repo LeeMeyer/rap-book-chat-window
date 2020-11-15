@@ -32,21 +32,31 @@
       :disableUserListToggle="false"
       :messageStyling="messageStyling"  
       @edit="editMessage" >
-      <template v-slot:header>
-          </template>
-          <template v-slot:text-message-body="{ message }">
+          <template #text-message-body="{ message }">
             <div style="padding: 5px;">
               <TransitionedWords :id="message.id" :transitionedHtml="message.data.text" :transitionDuration="animationDuration" />    
             </div>
-              <div class="score-section animate__animated" :style="{ 'animation-delay': message.scoreAnimatedEntranceDelay }" :class="message.author == 'me' ? 'animate__lightSpeedInRight' : 'animate__lightSpeedInLeft'" @click="explainScore(message, $event)">
-                  <span class="score">
-                    <span class="rap-star animate__animated" :class="{ animate__bounce: message.oldScore < message.score }" :style="{ 'animation-delay': `${animationDuration}s` }" /> 
-                    <AnimatedNumber :number="message.score" :delay="message.oldScore < message.score ? animationDuration * 2 : animationDuration" @animation-complete="$store.commit('updateOldScore', message)" />
-                    <span class="explain-score-button">
-                    <span class="text">why?</span>
-                </span>
-              </span>
+              <div 
+                class="score-section animate__animated" 
+                :style="{ animationDelay: message.scoreAnimatedEntranceDelay }" 
+                :class="message.author == 'me' ? 'animate__lightSpeedInRight' : 'animate__lightSpeedInLeft'" @click="explainScore(message)">
+                  <span class="score" :class="{ enableScoreExplanation }">
+                    <span class="rap-star animate__animated" :class="{ animate__bounce: message.oldScore < message.score }" :style="{ animationDelay: `${animationDuration}s` }" /> 
+                      <AnimatedNumber :number="message.score" :delay="message.oldScore < message.score ? animationDuration * 2 : animationDuration" @animation-complete="$store.commit('updateOldScore', message)" />
+                    <transition 
+                      appear
+                      enter-active-class="animate__animated animate__fadeInUp"
+                      leave-active-class="animate__animated animate__fadeOutDown"
+                      @after-enter="enableScoreExplanation=true"
+                      @before-leave="enableScoreExplanation=false"> 
+                      <span v-if="message.score > 0" class="explain-score-button" :style="{ animationDelay: `${message.oldScore < message.score ? animationDuration * 3 : animationDuration * 2}s` }">
+                        <div class="far fa-question-circle"></div>
+                      </span>
+                    </transition>
+                  </span>
             </div>
+        </template>
+        <template #header>
         </template>
       </beautiful-chat>
       <ScoreExplanationModal />
@@ -200,7 +210,8 @@ export default {
       }, 
       alwaysScrollToBottom: true, 
       messageStyling: true,
-      codeness: Prism.highlight(code, Prism.languages.javascript, 'javascript')
+      codeness: Prism.highlight(code, Prism.languages.javascript, 'javascript'),
+      enableScoreExplanation: false 
     }
   },
   computed: mapState({
@@ -238,7 +249,9 @@ export default {
       this.refactored = true;
     },
     explainScore(message) {
-      this.$store.commit('explainScore', message);
+      if (this.enableScoreExplanation) {
+        this.$store.commit('explainScore', message);
+      }
     }
   }
 }
@@ -277,10 +290,13 @@ a {
   position: absolute; 
   margin-top:5px; 
   margin-bottom: 5px; 
-  cursor: pointer; 
   white-space:nowrap; 
   color: black; 
   right:50px;
+
+  .enableScoreExplanation {
+    cursor: pointer;
+  }
 }
 
 .rap-star {
@@ -302,11 +318,7 @@ a {
 }
 
 .explain-score-button::before {
-  content: '\a0('
-}
-
-.explain-score-button::after {
-  content: ')'
+  content: '\a0'
 }
 
 pre {
