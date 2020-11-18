@@ -2,13 +2,15 @@ const marker = require('mark.js');
 const ranger = require('rangy-selectionsaverestore');
 const styler = require('jss').default;
 const uniqid = require('uniqid');
-const rhymeDetector = require('rhyme-detector');
+import rhymeDetector from 'rhyme-detector';
 const colourer = require('randomcolor');
 const { ref } = require('@vue/composition-api');
 const { onMounted } = require('@vue/composition-api');
 
 export default function() 
 { 
+  console.log(rhymeDetector);
+
   const colorsSeed = uniqid();
   
   let chat = ref(null);

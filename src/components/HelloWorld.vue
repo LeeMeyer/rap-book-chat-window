@@ -1,7 +1,5 @@
 <template>
 <div>  
-
-
     <button @click="changeCode">test time</button>
 
      <pre>
@@ -44,7 +42,6 @@
                     <span class="rap-star animate__animated" :class="{ animate__bounce: message.oldScore < message.score }" :style="{ animationDelay: `${animationDuration}s` }" /> 
                       <AnimatedNumber :number="message.score" :delay="message.oldScore < message.score ? animationDuration * 2 : animationDuration" @animation-complete="$store.commit('updateOldScore', message)" />
                     <transition 
-                      appear
                       enter-active-class="animate__animated animate__fadeInUp"
                       leave-active-class="animate__animated animate__fadeOutDown"
                       @after-enter="enableScoreExplanation=true"
