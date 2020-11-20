@@ -61,14 +61,14 @@
         <template #header>
           <div style="display: flex; width: 100%;">
             <span style="flex: .3"></span>
-            <span :style="{  backgroundImage: `url(${participants[0].imageUrl})`, width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }">
+            <span class="player" :style="{  backgroundImage: `url(${participants[0].imageUrl})` }">
               <span class="player-caption">React</span>
-               <div class="player-badge">{{getTotalScoreForUser(participants[0].id)}}</div>
+               <div class="player-badge">{{ getTotalScoreForUser(participants[0]) }}</div>
             </span>
             <span style="flex: 1"></span>
-            <span :style="{  backgroundImage: `url(${participants[1].imageUrl})`, width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }">
+            <span class="player" :style="{ backgroundImage: `url(${participants[1].imageUrl})` }">
                <span class="player-caption">Vue</span>
-               <div class="player-badge">{{getTotalScoreForUser(participants[1].id)}}</div>
+               <div class="player-badge">{{ getTotalScoreForUser(participants[1]) }}</div>
             </span>
           </div>
         </template>
@@ -196,7 +196,6 @@ export default {
       animationDuration: 1,
       titleImageUrl: 'https://a.slack-edge.com/66f9/img/avatars-teams/ava_0001-34.png',
       showTypingIndicator: '',
-      
       refactored: false,
       colors: {
         header: {
@@ -375,12 +374,18 @@ pre {
 .sc-header {
   background-image: url('https://user-images.githubusercontent.com/18104679/99765370-091b5c00-2b53-11eb-8248-3c9f742cf45d.png') !important;
   background-size: cover !important;
-  height: 120px;
+  min-height: 100px !important;
+
+  .player {
+    width: 60px; 
+    height: 60px; 
+    border-radius: 50%; 
+    margin-right: 10px 
+  }
 }
 
 .sc-header--close-button {
      margin-top: -60px !important;
      margin-right: -10px !important; 
 }
-
 </style>

@@ -100,8 +100,8 @@ export default new Vuex.Store({
         let rhymeGroups = detectRhymes(state.messageForWhichToExplainScore.data.text);
         return rhymeGroups.reduce((a, c) => a + `Rhyming ${c.map(w => `"${w}"`).join(' and ')} scores ${c.length * 10} points!\n \n`, '');
       },
-      getTotalScoreForUser: (state) => (authorId) => {
-        return state.messageList.filter(m => m.author === authorId).reduce((a, c) => a + c.score, 0);
+      getTotalScoreForUser: (state) => (user) => {
+        return state.messageList.filter(m => m.author === user.id).reduce((a, c) => a + c.score, 0);
       }
     } 
 })
