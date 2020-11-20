@@ -63,12 +63,12 @@
             <span style="flex: .3"></span>
             <span :style="{  backgroundImage: `url(${participants[0].imageUrl})`, width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }">
               <span class="player-caption">React</span>
-               <div class="player-badge">5</div>
+               <div class="player-badge">{{getTotalScoreForUser(participants[0].id)}}</div>
             </span>
             <span style="flex: 1"></span>
             <span :style="{  backgroundImage: `url(${participants[1].imageUrl})`, width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }">
                <span class="player-caption">Vue</span>
-               <div class="player-badge">5</div>
+               <div class="player-badge">{{getTotalScoreForUser(participants[1].id)}}</div>
             </span>
           </div>
         </template>
@@ -79,7 +79,7 @@
 
 <script>
 /*eslint-disable*/
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 import Prism from 'prismjs';
 import 'prismjs/themes/prism-solarizedlight.css'
 
@@ -228,13 +228,16 @@ export default {
       enableScoreExplanation: false 
     }
   },
-  computed: mapState({
-    messageList: state => state.messageList,
-    isChatOpen: state => state.isChatOpen,
-    newMessagesCount: state => state.newMessagesCount,
-    participants: state => state.participants,
-    messageForWhichToExplainScore: state => state.messageForWhichToExplainScore 
-  }), 
+  computed: { 
+      ...mapState({
+      messageList: state => state.messageList,
+      isChatOpen: state => state.isChatOpen,
+      newMessagesCount: state => state.newMessagesCount,
+      participants: state => state.participants,
+      messageForWhichToExplainScore: state => state.messageForWhichToExplainScore 
+    }),
+    ...mapGetters(['getTotalScoreForUser'])
+  }, 
   mounted() {
     this.$store.commit('init');
     this.$store.commit('openChatWindow');
