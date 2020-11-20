@@ -8,18 +8,6 @@
        </code>    
      </pre>
 
-        <v-badge
-          :content="5"
-          :value="5"
-          color="green"
-          overlap
-        >
-          <v-icon large>
-            mdi-vuetify
-          </v-icon>
-        </v-badge>
-
-
     <beautiful-chat ref="chat"
       :participants="participants"
       :titleImageUrl="titleImageUrl"
@@ -74,11 +62,13 @@
           <div style="display: flex; width: 100%;">
             <span style="flex: .3"></span>
             <span :style="{  backgroundImage: `url(${participants[0].imageUrl})`, width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }">
-              <span style="position: absolute; bottom: 0;">React</span>
+              <span class="player-caption">React</span>
+               <div class="player-badge">5</div>
             </span>
             <span style="flex: 1"></span>
             <span :style="{  backgroundImage: `url(${participants[1].imageUrl})`, width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }">
-               <span style="position: absolute; bottom: 0;">Vue</span>
+               <span class="player-caption">Vue</span>
+               <div class="player-badge">5</div>
             </span>
           </div>
         </template>
@@ -282,6 +272,32 @@ export default {
 </script>
 
 <style lang="scss">
+
+.player-caption {
+  position: absolute;
+  bottom: 0;
+  width: 60px;
+  text-align: center;
+}
+
+.player-badge {
+  margin-left: 50px;
+  border-radius: 5px;
+  background-color: #72A63B;
+  height: 10px;
+  white-space: nowrap;
+  padding: 0 5px;
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+  right: 15px;
+  top: 49px;
+  font-size: 12px;
+
+  &:before {
+    content: '⭐'
+  }
+}
 
 h3 {
   margin: 40px 0 0;
