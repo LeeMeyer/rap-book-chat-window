@@ -8,6 +8,18 @@
        </code>    
      </pre>
 
+        <v-badge
+          :content="5"
+          :value="5"
+          color="green"
+          overlap
+        >
+          <v-icon large>
+            mdi-vuetify
+          </v-icon>
+        </v-badge>
+
+
     <beautiful-chat ref="chat"
       :participants="participants"
       :titleImageUrl="titleImageUrl"
@@ -53,7 +65,22 @@
                   </span>
             </div>
         </template>
+        <template #user-avatar="{ user }">
+          <div>
+            <div :style="{  backgroundImage: `url(${user.imageUrl})`, width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }"></div>
+          </div>
+        </template>
         <template #header>
+          <div style="display: flex; width: 100%;">
+            <span style="flex: .3"></span>
+            <span :style="{  backgroundImage: `url(${participants[0].imageUrl})`, width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }">
+              <span style="position: absolute; bottom: 0;">React</span>
+            </span>
+            <span style="flex: 1"></span>
+            <span :style="{  backgroundImage: `url(${participants[1].imageUrl})`, width: '60px', height: '60px', borderRadius: '50%', marginRight: '10px' }">
+               <span style="position: absolute; bottom: 0;">Vue</span>
+            </span>
+          </div>
         </template>
       </beautiful-chat>
       <ScoreExplanationModal />
@@ -285,11 +312,12 @@ a {
 
 .score-section {
   position: absolute; 
-  margin-top:5px; 
-  margin-bottom: 5px; 
   white-space:nowrap; 
-  color: black; 
+  color: darkblue;
   right:50px;
+  position: relative;
+  left: 0;
+  bottom: 0;
 
   .enableScoreExplanation {
     cursor: pointer;
@@ -319,11 +347,21 @@ a {
 }
 
 pre {
- 
   background: rgba(76, 175, 80, 0.1);
   margin: 20px;
   padding: 20px;
   padding-top: 0;
+}
+
+.sc-header {
+  background-image: url('https://user-images.githubusercontent.com/18104679/99765370-091b5c00-2b53-11eb-8248-3c9f742cf45d.png') !important;
+  background-size: cover !important;
+  height: 120px;
+}
+
+.sc-header--close-button {
+     margin-top: -60px !important;
+     margin-right: -10px !important; 
 }
 
 </style>

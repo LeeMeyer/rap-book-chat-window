@@ -2,6 +2,9 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import uniqid from 'uniqid';
 import detectRhymes from 'rhyme-detector';
+import evanYou from '../assets/evanyou.png';
+import zuckerberg from '../assets/zuck3.png';
+
 
 Vue.use(Vuex);
 
@@ -18,12 +21,12 @@ export default new Vuex.Store({
       {
         id: 'user1',
         name: 'Matteo',
-        imageUrl: 'https://avatars3.githubusercontent.com/u/1915989?s=230&v=4'
+        imageUrl: zuckerberg
       },
       {
         id: 'me',
         name: 'Support',
-        imageUrl: 'https://avatars3.githubusercontent.com/u/37018832?s=200&v=4'
+        imageUrl: evanYou
       }
     ]
   },
