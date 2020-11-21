@@ -1,12 +1,15 @@
 <template>
 <div>  
-    <button @click="changeCode">test time</button>
+<!--    <button @click="changeCode">test time</button> -->
 
-     <pre>
+<!--     <pre>
        <code>
           <TransitionedWords :transitionedHtml="codeness" :allowHtml="true" /> 
        </code>    
      </pre>
+     -->
+
+     <bike-progress></bike-progress>
 
     <beautiful-chat ref="chat"
       :participants="participants"
@@ -86,7 +89,7 @@ import useRhymeHighlight from './use-rhyme-highlight';
 import TransitionedWords from './TransitionedWords'
 import AnimatedNumber from './AnimatedNumber'
 import ScoreExplanationModal from './ScoreExplanationModal';
-
+import BikeProgress from './BikeProgress';
 
 let code2 = `let useRhymeHighlighter = function()  {
     const colorsSeed = uniqid();
@@ -183,7 +186,8 @@ export default {
   components: {
     TransitionedWords,
     AnimatedNumber,
-    ScoreExplanationModal
+    ScoreExplanationModal,
+    BikeProgress
   },
   name: 'app',
   setup() {     
@@ -238,7 +242,6 @@ export default {
   }, 
   mounted() {
     this.$store.commit('init');
-    this.$store.commit('openChatWindow');
   },
   methods: {
     sendMessage (text) {
@@ -363,12 +366,12 @@ a {
   content: '\a0'
 }
 
-pre {
+/*pre {
   background: rgba(76, 175, 80, 0.1);
   margin: 20px;
   padding: 20px;
   padding-top: 0;
-}
+}*/
 
 .sc-header {
   background-image: url('https://user-images.githubusercontent.com/18104679/99765370-091b5c00-2b53-11eb-8248-3c9f742cf45d.png') !important;
