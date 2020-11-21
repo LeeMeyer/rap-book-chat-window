@@ -1,5 +1,5 @@
 <template>  
-  <transition-group :data-transitioned-words-id="id" class="words" name="list-complete" tag="div" :style="{ '--word-transition-duration' : `${this.transitionDuration}s`} "> 
+  <transition-group :data-transitioned-words-id="id" class="words" name="list-complete" tag="div" :style="{ '--word-transition-duration' : `${this.transitionDuration}s`}" @after-enter="$emit('after-enter')" > 
     <span
       v-for="item in items"
       :key="item.id"
@@ -47,8 +47,15 @@ export default{
   methods: {
     tokenize(s) {
       
-       let matches = !this.allowHtml ? s.matchAll(/(?<prefix>[^\w\s]*)(?<word>[\w'-]+)(?<suffix>([^\w\s]|\n)*)/g) : s.matchAll(/(?<word>\n|(\w|')+|(<[^<>]+>[^<>]+<\/[^<>]+>)|\s+|\W)(?<suffix>(\n)*)/g);
-     
+       let matches = [];
+       
+       if (!this.allowHtml) {
+          matches = s.matchAll(/(?<prefix>[^\w\s]*)(?<word>[\w'-]+)(?<suffix>([^\w\s]|\n)*)/g);
+       }
+       else {
+         matches = s.matchAll(/(?<word>\n|(\w|')+|(<[^<>]+>[^<>]+<\/[^<>]+>)|\s+|\W)(?<suffix>(\n)*)/g);
+       }
+
        let tokens = [];
 
        for(let match of matches) {
@@ -80,11 +87,11 @@ export default{
   content: '\a0';
 }
 
-.list-complete-enter, .list-complete-leave-to
-{
+.list-complete-enter, .list-complete-leave-to {
   opacity: 0;
   transform: translateY(30px);
 }
+
 .list-complete-leave-active {
   position: absolute;
 }

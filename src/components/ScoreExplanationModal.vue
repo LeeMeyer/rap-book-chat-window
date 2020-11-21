@@ -1,10 +1,12 @@
 <template>
-    <transition name="displayModalElement" duration="500">
+    <transition name="modal-transition" duration="500" @after-enter="okButtonExited = false" @before-leave="okButtonExited = true">
       <div v-show="scoreExplanantionModalIsOpen" ref="modal" class="modal">
           <div>
               <div class="content" ref="content">
                   <TransitionedWords ref="modalWords" :transitionedHtml="messageText" :transitionDuration="transitionDuration" />
-                  <button v-if="scoreExplanantionModalIsOpen" @click="$store.commit('closeScoreExplantion')" >OK</button>
+                  <div class="button-section">
+                    <m-fab :class="{ 'ok-enter': !okButtonExited }" :exited="okButtonExited" @click="$store.commit('closeScoreExplantion')">OK</m-fab>
+                  </div>
               </div>
           </div>
       </div>
@@ -14,7 +16,11 @@
 <script>
 import TransitionedWords from './TransitionedWords'
 import { mapState } from 'vuex';
+import Vue from 'vue';
+import fab from 'material-components-vue/dist/fab';
+import "material-components-vue/dist/fab/fab.min.css";
 
+Vue.use(fab);
 
 export default {
   components: {
@@ -24,7 +30,8 @@ export default {
   data() {
       return {
         messageText: '',
-        transitionDuration: 0
+        transitionDuration: 0,
+        okButtonExited: true
       }
   },
   computed: mapState({
@@ -84,7 +91,7 @@ export default {
  };
 </script>
 
-<style>
+<style lang="scss">
 .modal {
   font-family: Helvetica Neue,Helvetica,Arial,sans-serif;
   font-weight: 300;
@@ -100,9 +107,20 @@ export default {
   opacity: 0;
   position: fixed;
   -webkit-overflow-scrolling: auto;
-}
 
-.modal .content {
-  display: inline-block;
+  .content {
+    display: inline-block;
+
+    .button-section
+    {
+      display: flex;
+      margin-top: 10px;
+      justify-content: flex-end;
+
+      .ok-enter {
+        transition-delay: .5s;
+      }
+    }
+  }
 }
 </style>
