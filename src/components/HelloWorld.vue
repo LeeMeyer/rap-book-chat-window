@@ -76,7 +76,6 @@
       <ScoreExplanationModal />
     </div>
 </template>
-
 <script>
 /*eslint-disable*/
 import { mapState, mapGetters } from 'vuex';

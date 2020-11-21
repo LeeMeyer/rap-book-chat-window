@@ -69,8 +69,6 @@ export default {
             gsap.to(this.$refs.modal, { ...from, onComplete: () => chatMessageElementToMorph.style.opacity = 1  } );
             // eslint-disable-next-line no-undef           
             gsap.to(this.$refs.content, { fontSize: '14px', width: "100vw", maxWidth: r.width }, 0);
-
-            this.transitionDuration = .5;
             this.messageText = this.messageForWhichToExplainScore.data.text;
           }
         }

@@ -1,5 +1,5 @@
 <template>  
-  <transition-group :data-transitioned-words-id="id" class="words" name="list-complete" tag="div" :style="{ '--word-transition-duration' : `${this.transitionDuration}s`}" @after-enter="$emit('after-enter')" > 
+  <transition-group :data-transitioned-words-id="id" class="words" name="list-complete" tag="div" :style="{ '--word-transition-duration' : `${this.transitionDuration}s`}" @after-leave="$emit('complete')" > 
     <span
       v-for="item in items"
       :key="item.id"
