@@ -1,35 +1,52 @@
 <template>
 <div>
     <div class="r_flex_container">            
-            <div style="display: flex; justify-content: center; width: 100vw;">
-            <div :class="{ flags: !firstButtonClicks, 'flags-exit': firstButtonClicks > 1 }" :style="{ backgroundImage: `url(${flags})`, width: '500px', height: '200px', display: 'flex', justifyContent: 'center',  backgroundSize: 'contain', backgroundRepeat: 'no-repeat'}">
-                    <div style="max-width: 250px;">
-                        <div class="stuff animate__animated" :style="{ 'animation-delay': !firstButtonClicks ? '0s' : '1.5s' }"  :class="{ animate__zoomIn: !firstButtonClicks, animate__zoomOut: firstButtonClicks > 1 }">Vue this!</div>
-                    </div>    
-            </div>
-            </div>
-            <div class="r_flex_expand_child">
-                <p class="animate__animated animate__fadeIn" :class="firstButtonClicks > 1 ? 'animate__fadeOut' : ''" style="animation-delay: 0.5s;">Congrats on overengineering your onboarding with React!</p>
-                <p class="animate__animated animate__fadeIn" :class="firstButtonClicks > 1 ? 'animate__fadeOut' : ''" :style="{ 'animation-delay': !firstButtonClicks ? '1s' : '0s' }" @animationend="hideProceedButton = false">Would you like to make life easier for yourself?</p>
-                <br>
-                <div class="animate__animated">
-                        <m-button 
-                            :class="{ 'has-error': firstButtonClicks == 1, animate__zoomIn: !firstButtonClicks, spinning: firstButtonClicks > 1 }" 
-                            class="animate__animated" 
-                            :style="{ 'animation-delay': firstButtonClicks ? '0s' : '1.5s' }" 
-                            unelevated 
-                            @click="onclick()" >
-                                <iframe id="buttonIcon" ref="buttonIcon" slot="icon" style="width: 50px; height: 50px; border: none;" :src="thumbsup"/>
-                                <span v-if="firstButtonClicks == 1">
-                                    <span>Go back to 2018</span>
-                                </span> 
-                                <span v-if="!firstButtonClicks">{{message}}</span>                                                               
-                        </m-button>
+                <div class="welcome-container">
+                    <transition 
+                      appear
+                      enter-active-class="flags"
+                      leave-active-class="flags-exit"
+                      @after-enter="showParagraph1 = true"
+                    >
+                        <div v-if="showTitle" class="welcome" :style="{ backgroundImage: `url(${flags})`}">
+                                <div>
+                                    <transition 
+                                       appear 
+                                       enter-active-class="animate__animated animate__zoomIn"
+                                       leave-active-class="animate__animated animate__zoomOut"
+                                    >
+                                        <div v-if="showTitle" class="welcome-text">Vue this!</div>
+                                    </transition>
+                                </div>    
+                        </div>
+                    </transition>
                 </div>
+            
+            <div class="r_flex_expand_child">
+
+                <transition enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut" @after-enter="showParagraph2 = true" @after-leave="showTitle = false">
+                    <p v-if="showParagraph1">Congrats on overengineering your onboarding with React!</p>
+                </transition>
+                <transition enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut" @after-enter="showButton = true" @after-leave="showParagraph1 = false">
+                    <p v-if="showParagraph2">Would you like to make life easier for yourself?</p>
+                </transition>
+                <br>
+                <transition enter-active-class="animate__animated animate__zoomIn" leave-active-class="animate__animated animate__zoomOut">
+                    <m-button v-if="showButton"
+                        :class="{ 'has-error': firstButtonClicks == 1, animate__zoomIn: !firstButtonClicks, spinning: firstButtonClicks > 1 }" 
+                        unelevated 
+                        @click="onclick()" >
+                            <iframe id="buttonIcon" ref="buttonIcon" slot="icon" :src="thumbsup"/>
+                            <span v-if="firstButtonClicks == 1">
+                                <span>Go back to 2018</span>
+                            </span> 
+                            <span v-if="!firstButtonClicks">{{message}}</span>                                                               
+                    </m-button>
+                </transition>
                 <transition name="errorMessage"
                       enter-active-class="animate__animated animate__flipInY"
                       leave-active-class="animate__animated  animate__flipOutY">
-                    <p v-if="firstButtonClicks == 1" style="color: red;">You use too many frameworks on your site already!</p>
+                    <p v-if="firstButtonClicks == 1" class="error">You use too many frameworks on your site already!</p>
                 </transition>                                   
             </div>
         <div class="r_flex_fixed_child">
@@ -73,7 +90,11 @@ export default{
           thumbsup,
           firstButtonClicks: 0,
           allowTimeTravel: false,
-          message: 'let\'s do it!'
+          message: 'let\'s do it!',
+          showTitle: true,
+          showParagraph1: false,
+          showParagraph2: false,
+          showButton: false
       };
   },
   methods: {
@@ -97,13 +118,43 @@ export default{
 </script>
 
 <style scoped lang="scss">
+
+.welcome-container {
+
+    display: flex; 
+    justify-content: center; 
+    width: 100vw;
+
+    .welcome {
+        width: 500px; 
+        height: 200px; 
+        display: flex; 
+        justify-content: center; 
+        background-size: contain; 
+        background-repeat: no-repeat;
+
+        div {
+            max-width: 250px;
+        }
+    }
+}
+
+.error { 
+    color: red;
+}
+
+
 button { 
  
    transition: background-color 1s;
-
-
    --mdc-theme-primary: #42b883;
    height: 45px;
+
+   #buttonIcon {
+       width: 50px; 
+       height: 50px; 
+       border: none;
+   }
 
    &.has-error {
        --mdc-theme-primary: #EE4C4C;  
@@ -151,7 +202,7 @@ button {
 }
 
 @keyframes flags-exit {
-   100% { background-position-y: -182px; } 
+   100% { background-position-y: -185px; } 
 }
 
 .r_flex_container{
@@ -185,7 +236,7 @@ button {
   font-size: 50px;
 }
 
-.stuff {
+.welcome-text {
     margin-top: 30px;
     font-family: 'Rock Salt', cursive;
     font-size: 40px;
