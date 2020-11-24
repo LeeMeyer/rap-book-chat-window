@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div class="r_flex_container">            
+    <div class="r_flex_container">        
                 <div class="welcome-container">
                     <transition 
                       appear
@@ -8,22 +8,20 @@
                       leave-active-class="flags-exit"
                       @after-enter="showParagraph1 = true"
                     >
-                        <div v-if="showTitle" class="welcome" :style="{ backgroundImage: `url(${flags})`}">
+                        <div v-if="showFlags" class="welcome" :style="{ backgroundImage: `url(${flags})`}">
                                 <div>
                                     <transition 
                                        appear 
                                        enter-active-class="animate__animated animate__zoomIn"
                                        leave-active-class="animate__animated animate__zoomOut"
-                                    >
+                                       @before-leave="showFlags = false">
                                         <div v-if="showTitle" class="welcome-text">Vue this!</div>
                                     </transition>
                                 </div>    
                         </div>
                     </transition>
                 </div>
-            
             <div class="r_flex_expand_child">
-
                 <transition enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut" @after-enter="showParagraph2 = true" @after-leave="showTitle = false">
                     <p v-if="showParagraph1">Congrats on overengineering your onboarding with React!</p>
                 </transition>
@@ -32,21 +30,25 @@
                 </transition>
                 <br>
                 <transition enter-active-class="animate__animated animate__zoomIn" leave-active-class="animate__animated animate__zoomOut">
-                    <m-button v-if="showButton"
-                        :class="{ 'has-error': firstButtonClicks == 1, animate__zoomIn: !firstButtonClicks, spinning: firstButtonClicks > 1 }" 
+                    <m-button ref="button" v-if="showButton"
+                        :class="{ 'has-error': showError, spinning: showNextScreen }"
+                        :style="getSpinnerStyle()" 
                         unelevated 
                         @click="onclick()" >
                             <iframe id="buttonIcon" ref="buttonIcon" slot="icon" :src="thumbsup"/>
-                            <span v-if="firstButtonClicks == 1">
+                            <span v-if="!showError && !showNextScreen" > 
+                                Let's do it!
+                            </span>
+                            <span v-if="showError && showParagraph2">
                                 <span>Go back to 2018</span>
-                            </span> 
-                            <span v-if="!firstButtonClicks">{{message}}</span>                                                               
+                            </span>                                                               
                     </m-button>
                 </transition>
                 <transition name="errorMessage"
                       enter-active-class="animate__animated animate__flipInY"
-                      leave-active-class="animate__animated  animate__flipOutY">
-                    <p v-if="firstButtonClicks == 1" class="error">You use too many frameworks on your site already!</p>
+                      leave-active-class="animate__animated  animate__flipOutY"
+                      @after-leave="showParagraph2 = false">
+                    <p v-if="showError" class="error">You use too many frameworks on your site already!</p>
                 </transition>                                   
             </div>
         <div class="r_flex_fixed_child">
@@ -92,26 +94,32 @@ export default{
           allowTimeTravel: false,
           message: 'let\'s do it!',
           showTitle: true,
+          showFlags: true,
           showParagraph1: false,
           showParagraph2: false,
-          showButton: false
+          showButton: false,
+          showError: false,
+          showNextScreen: false
       };
-  },
+  },  
   methods: {
-      onclick() {
-          this.firstButtonClicks++;
-      }
-  },
-  watch: {
-    firstButtonClicks(newValue, oldValue) {
-        if ((!oldValue && newValue) || (!newValue && oldValue))
-        {
-            this.$refs.buttonIcon.contentDocument.querySelector('svg').dispatchEvent(new Event('click'))
+    onclick() {
+        if (!this.showError) {
+            this.showError = true;
+            this.$refs.buttonIcon.contentDocument.querySelector('svg').dispatchEvent(new Event('click'));
+        }
+        else {
+            this.showError = false;
+            this.showNextScreen = true;
+        }
+    },
+    getSpinnerStyle() {
+        if (!this.showParagraph2) {
+            let r = this.$refs.button.$el.getBoundingClientRect();
+            return { position:  'absolute', bottom: r.bottom + 'px', top: r.top + 'px', right: r.right + 'px', left: r.left + 'px' }; 
         }
 
-        if (newValue == 1) {
-            this.message = `go back to 2018`;            
-        }
+        return {};
     }
   } 
 }
@@ -143,9 +151,7 @@ export default{
     color: red;
 }
 
-
-button { 
- 
+button {  
    transition: background-color 1s;
    --mdc-theme-primary: #42b883;
    height: 45px;
