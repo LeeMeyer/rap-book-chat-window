@@ -27,6 +27,7 @@
     "vue-beautiful-chat": "^2.5.0",
     "vue-fb-customer-chat": "^0.2.0",
     "vue-flip-toolkit": "^1.6.0",
+    "vue-js-popover": "^1.2.1",
     "vue-material": "^1.0.0-beta-15",
     "vue-router": "^3.4.9",
     "vue-star": "0.0.4",

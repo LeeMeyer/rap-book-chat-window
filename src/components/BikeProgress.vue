@@ -1,19 +1,51 @@
 <template>
 <div>
     <div class="r_flex_container">        
+            <div style="display: flex; flex-flow: row; align-self:center;">
+                <transition enter-active-class="animate__animated animate__fadeInDownBig">
+                    <h1 v-if="showNextScreen" style="margin-top: 100%; margin-bottom: 30px;">Choose a framework</h1>
+                </transition>
+            </div>            
+            <div style="display: flex; flex-flow: row; align-self:center;">
+                <transition enter-active-class="animate__animated animate__rollIn">
+                    <img style="align-self: center; margin: 10px; border-radius: 50%; margin-right: 50px; background: #fff; cursor: pointer; border: 1px solid;" width="200" height="200" v-if="showNextScreen" :src="dantoon" v-popover:foo.right  @mouseover="hoverCircle1 = true"/>
+                </transition>
+                <transition enter-active-class="animate__animated animate__rollIn" @after-enter="showEmojiButton = true">
+                    <img style="animation-delay: 0.5s; align-self: center; margin: 10px; border-radius: 50%; background: #fff; cursor: pointer; border: 1px solid;" width="200" height="200" v-if="showNextScreen" :src="stoon"  v-popover:foo.right  @mouseover="hoverCircle2 = true"/>
+                </transition>
+
+                <popover name="foo" event="hover">
+                    <div style="font-family: 'Rock Salt', cursive; font-size: 38px; padding: 10px;">
+                        React!
+                    </div>
+                </popover>
+            </div>
+
+            
+            <div style="display: flex; flex-flow: row; align-self:center;">
+                    <m-button 
+                        v-if="hoverCircle1 && hoverCircle2"
+                        class="emoji-button"
+                        style="--mdc-theme-primary: #fff;" 
+                        unelevated 
+                        @click="smile = !smile"><span slot="icon" class="emoji" :class="{ smile }" /><span>FML</span></m-button>
+            </div>
+   
                 <div class="welcome-container">
                     <transition 
                       appear
                       enter-active-class="flags"
                       leave-active-class="flags-exit"
                       @after-enter="showParagraph1 = true"
+                      @before-leave="showButton = false"
+                      @after-leave="showNextScreen = true"
                     >
                         <div v-if="showFlags" class="welcome" :style="{ backgroundImage: `url(${flags})`}">
                                 <div>
                                     <transition 
                                        appear 
                                        enter-active-class="animate__animated animate__zoomIn"
-                                       leave-active-class="animate__animated animate__zoomOut"
+                                       leave-active-class="animate__animated animate__zoomOut animate__faster"
                                        @before-leave="showFlags = false">
                                         <div v-if="showTitle" class="welcome-text">Vue this!</div>
                                     </transition>
@@ -22,21 +54,21 @@
                     </transition>
                 </div>
             <div class="r_flex_expand_child">
-                <transition enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut" @after-enter="showParagraph2 = true" @after-leave="showTitle = false">
+                <transition enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut animate__faster" @after-enter="showParagraph2 = true" @after-leave="showTitle = false">
                     <p v-if="showParagraph1">Congrats on overengineering your onboarding with React!</p>
                 </transition>
-                <transition enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut" @after-enter="showButton = true" @after-leave="showParagraph1 = false">
+                <transition enter-active-class="animate__animated animate__fadeIn" leave-active-class="animate__animated animate__fadeOut animate__faster" @after-enter="showButton = true" @after-leave="showParagraph1 = false">
                     <p v-if="showParagraph2">Would you like to make life easier for yourself?</p>
                 </transition>
                 <br>
-                <transition enter-active-class="animate__animated animate__zoomIn" leave-active-class="animate__animated animate__zoomOut">
+                <transition enter-active-class="animate__animated animate__fadeInUp" leave-active-class="animate__animated animate__bounceOutUp">
                     <m-button ref="button" v-if="showButton"
-                        :class="{ 'has-error': showError, spinning: showNextScreen }"
+                        :class="{ 'has-error': showError, spinning: showingNextScreen }"
                         :style="getSpinnerStyle()" 
                         unelevated 
                         @click="onclick()" >
                             <iframe id="buttonIcon" ref="buttonIcon" slot="icon" :src="thumbsup"/>
-                            <span v-if="!showError && !showNextScreen" > 
+                            <span v-if="!showError && !showingNextScreen" > 
                                 Let's do it!
                             </span>
                             <span v-if="showError && showParagraph2">
@@ -46,7 +78,7 @@
                 </transition>
                 <transition name="errorMessage"
                       enter-active-class="animate__animated animate__flipInY"
-                      leave-active-class="animate__animated  animate__flipOutY"
+                      leave-active-class="animate__animated  animate__flipOutY animate__faster"
                       @after-leave="showParagraph2 = false">
                     <p v-if="showError" class="error">You use too many frameworks on your site already!</p>
                 </transition>                                   
@@ -74,8 +106,11 @@ import fab from 'material-components-vue/dist/fab';
 import "material-components-vue/dist/fab/fab.min.css";
 import flags from '../assets/Vue_js_flags.png'
 import thumbsup from '../assets/thumbsup.svg';
+import dantoon from '../assets/dan toon.gif';
+import stoon from '../assets/stoon.png';
+import Popover from 'vue-js-popover';
 
-
+Vue.use(Popover, { tooltip: true })
 Vue.use(iconbutton);
 Vue.use(button);
 Vue.use(card);
@@ -99,7 +134,14 @@ export default{
           showParagraph2: false,
           showButton: false,
           showError: false,
-          showNextScreen: false
+          showingNextScreen: false,
+          showNextScreen: false,
+          dantoon,
+          stoon,
+          showCircle2: false, 
+          hoverCircle1: false,
+          hoverCircle2: false,
+          smile: false
       };
   },  
   methods: {
@@ -110,7 +152,7 @@ export default{
         }
         else {
             this.showError = false;
-            this.showNextScreen = true;
+            this.showingNextScreen = true;
         }
     },
     getSpinnerStyle() {
@@ -170,7 +212,7 @@ button {
         --mdc-theme-primary: #bdbdbd;  
 
        #buttonIcon {
-            animation: antiClockwiseSpin 1s infinite linear;
+            animation: antiClockwiseSpin .5s infinite linear;
             margin-right: -4px;
        }
    }
@@ -231,7 +273,7 @@ button {
 }
 
 .r_flex_expand_child {
-	flex:auto;
+  flex:auto;
   font-size: 20px;
   text-align: center;
 }
@@ -252,6 +294,45 @@ button {
 @keyframes antiClockwiseSpin {
 	0%  {transform: rotate(360deg);}
 	100% {transform: rotate(0deg);}	
+}
+
+.emoji {
+    background: transparent url(https://user-images.githubusercontent.com/18104679/100203760-1f605800-2f57-11eb-839b-a39800cecdd9.gif) 0 -1250px no-repeat;
+    animation: cry-emoji .2s steps(2) forwards;
+    height: 50px;
+    width: 50px;
+    animation-delay: .5s;
+}
+
+.emoji.smile {
+   animation: smile-emoji .3s steps(3) forwards;
+}
+
+@keyframes cry-emoji {
+  0%  { background-position: 0 -1250px; }
+  100%  { background-position: 0 -1350px; }
+}
+
+@keyframes smile-emoji {
+  0%  { background-position: 0 -1350px; }
+  96%  { background-position: 0 -1500px; }
+  100%  { background-position: 0 0; }
+}
+
+body {
+  background-color: lightblue;
+}
+
+.emoji-button {
+    height: 80px;
+    color: #2c3e50;
+    width: 130px;
+}
+
+.emoji {
+    margin: 0;
+    padding: 0;
+    width:100px;
 }
 
 </style>
