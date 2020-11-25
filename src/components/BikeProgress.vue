@@ -23,9 +23,18 @@
                 <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-leave="showSecondCodeSample = true" @after-enter="showWow = true">
                     <img v-if="showCli && !showingSecondCodeSample" :src="cliScreenshot"/>
                 </transition>
-                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="showBigSmile = true">
-                    <div style="height: 500px; width: 90vw; overflow: scroll; background: white; margin-top: 10px;" v-if="showSecondCodeSample">
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" 
+                  leave-active-class="animate__animated animate__lightSpeedOutLeft" 
+                  @after-enter="showBigSmile = true"
+                  @after-leave="showThirdCodeSample = true">
+                    <div style="height: 500px; width: 90vw; overflow: scroll; background: white; margin-top: 10px;" v-if="showSecondCodeSample && !showingThirdCodeSample">
                         <pre v-html="secondCodeSample"></pre>  
+                    </div>
+                </transition>
+
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft">
+                    <div v-if="showThirdCodeSample" style="height: 500px; width: 90vw; overflow: scroll; background: white; margin-top: 10px;">
+                        <TransitionedWords :transitionedHtml="showThirdCodeSample ? thirdCodeSample : forthCodeSample" :allowHtml="true" />
                     </div>
                 </transition>
             </div>   
@@ -137,6 +146,7 @@ import cliScreenshot from "../assets/cli-select-features.png"
 
 const c = require('./sample1')
 const c2 = require('./sample2')
+const c3 = require('./sample3')
 
 Vue.use(Popover, { tooltip: true })
 Vue.use(iconbutton);
@@ -183,7 +193,11 @@ export default{
           secondCodeSample: Prism.highlight(code3, Prism.languages.html, 'html'),
           showingSecondCodeSample: false,
           showSecondCodeSample: false,
-          showBigSmile: false
+          showBigSmile: false,
+          showingThirdCodeSample: false,
+          showThirdCodeSample: false,
+          thirdCodeSample: Prism.highlight(c3.code1.replaceAll("=>", "=˃"), Prism.languages.javascript, 'javascript'),
+          forthCodeSample: Prism.highlight(c3.code2.replaceAll("=>", "=˃"), Prism.languages.javascript, 'javascript')
       };
   },  
   methods: {
@@ -213,8 +227,6 @@ export default{
             let r = this.$refs.test.$el.getBoundingClientRect();
             var s = { position:  'absolute', bottom: r.bottom + 'px', top: r.top + 'px', right: r.right + 'px', left: r.left + 'px' };
             
-            console.log(this.showSecondCodeSample)
-
             if (this.showSecondCodeSample) 
             {
                 s.width = '150px';
@@ -242,6 +254,11 @@ export default{
         
         if (!this.showingSecondCodeSample && this.showCli)
             this.showingSecondCodeSample = true;
+
+            
+        if (this.showSecondCodeSample && !this.showingThirdCodeSample) {
+            this.showingThirdCodeSample = true;
+        }
     }
   } 
 }
