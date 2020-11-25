@@ -39,7 +39,7 @@
                         ref="test"
                         :style="getStyle()"
                         unelevated 
-                        @click="smile = true;"><span slot="icon" class="emoji" :class="{ smile }" />
+                        @click="smile = true;"><span slot="icon" class="emoji" :class="{ cry: !smile, smile: smile && !nextIsCli, wow: nextIsCli }" />
                         <span v-if="!smile">FML</span>
                         <span style="white-space: nowrap;" v-if="nextIsCli">CLI<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
                         <span v-if="smile && !nextIsCli">VUE!</span>
@@ -331,14 +331,27 @@ button {
 
 .emoji {
     background: transparent url(https://user-images.githubusercontent.com/18104679/100203760-1f605800-2f57-11eb-839b-a39800cecdd9.gif) 0 -1250px no-repeat;
-    animation: cry-emoji .2s steps(2) forwards;
     height: 50px;
     width: 50px;
     animation-delay: .5s;
 }
 
+.emoji.cry {
+    animation: cry-emoji .2s steps(2) forwards;
+}
+
 .emoji.smile {
    animation: smile-emoji .3s steps(3) forwards;
+}
+
+.emoji.wow {
+   background-position: 0 0;
+   animation: wow-emoji 1s steps(10) forwards;
+}
+
+@keyframes wow-emoji {
+  0%  { background-position: 0 0; }
+  100%  { background-position: 0 -500px; }
 }
 
 @keyframes cry-emoji {
