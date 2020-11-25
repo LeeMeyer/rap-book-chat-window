@@ -13,17 +13,20 @@
                 </transition>
                 <transition enter-active-class="animate__animated animate__rollIn animate__delay-half-s" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-leave="showFirstCodeSample = true">
                     <img style="align-self: center; margin: 10px; border-radius: 50%; background: #fff; cursor: pointer; border: 1px solid;" width="200" height="200" v-if="showNextScreen && !smile" :src="stoon"  v-popover:foo.right  @mouseover="hoverCircle2 = true"/>
-                </transition>
-
-                
+                </transition>                
             <div style="display: flex; flex-flow: row; align-self:center; justify-content: center;">
                 <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="nextIsCli = true" @after-leave="showCli = true" >
                     <div v-if="showFirstCodeSample && !showingCli">
                         <pre v-html="firstCodeSample"></pre>  
                     </div>
                 </transition>
-                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" @after-enter="showWow = true">
-                    <img v-if="showCli" :src="cliScreenshot"/>
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-leave="showSecondCodeSample = true" @after-enter="showWow = true">
+                    <img v-if="showCli && !showingSecondCodeSample" :src="cliScreenshot"/>
+                </transition>
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" >
+                    <div style="height: 500px; width: 90vw; overflow: scroll; background: white; margin-top: 10px;" v-if="showSecondCodeSample">
+                        <pre v-html="secondCodeSample"></pre>  
+                    </div>
                 </transition>
             </div>   
                 <popover name="foo" event="hover">
@@ -45,11 +48,11 @@
                         unelevated 
                        ><span slot="icon" class="emoji" :class="{ cry: !smile, smile: smile || nextIsCli, wow: showWow }" />
                         <span v-if="!smile">FML</span>
-                        <span style="white-space: nowrap;" v-if="nextIsCli">CLI<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
+                        <span style="white-space: nowrap;" v-if="nextIsCli && !showCli">CLI<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
+                        <span style="white-space: nowrap;" v-if="showCli">SFC<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
                         <span v-if="smile && !nextIsCli">VUE!</span>
                     </m-button>
             </div>
-   
                 <div class="welcome-container">
                     <transition 
                       appear
@@ -132,6 +135,7 @@ import Prism from 'prismjs';
 import cliScreenshot from "../assets/cli-select-features.png"
 
 const c = require('./sample1')
+const c2 = require('./sample2')
 
 Vue.use(Popover, { tooltip: true })
 Vue.use(iconbutton);
@@ -139,9 +143,8 @@ Vue.use(button);
 Vue.use(card);
 Vue.use(fab);
 
-
 let code2 = c.code;
-
+let code3 = c2.code;
 
 export default{
   name: 'BikeProgress',
@@ -175,7 +178,10 @@ export default{
           firstCodeSample: Prism.highlight(code2, Prism.languages.html, 'html'),
           nextIsCli: false,
           cliScreenshot,
-          showWow: false 
+          showWow: false,
+          secondCodeSample: Prism.highlight(code3, Prism.languages.html, 'html'),
+          showingSecondCodeSample: false,
+          showSecondCodeSample: false
       };
   },  
   methods: {
@@ -184,9 +190,12 @@ export default{
             this.showError = true;
             this.$refs.buttonIcon.contentDocument.querySelector('svg').dispatchEvent(new Event('click'));
         }
-        else {
+        else if (!this.showinNextScreen) {
             this.showError = false;
             this.showingNextScreen = true;
+        }
+        else if (!this.showingSecondCodeSample) {
+            this.showingSecondCodeSample = true;
         }
     },
     getSpinnerStyle() {
@@ -198,7 +207,7 @@ export default{
         return {};
     },
     getStyle() {
-        if ((this.smile && !this.showFirstCodeSample) || this.showingCli) {
+        if ((this.smile && !this.showFirstCodeSample) || this.showingCli || this.showSecondCodeSample) {
             let r = this.$refs.test.$el.getBoundingClientRect();
             return { position:  'absolute', bottom: r.bottom + 'px', top: r.top + 'px', right: r.right + 'px', left: r.left + 'px' };
         }
@@ -208,8 +217,11 @@ export default{
     clickEmoji() {
         if (this.nextIsCli)
             this.showingCli = true;
-        else 
+        else if (!this.smile)
             this.smile = true;
+        
+        if (!this.showingSecondCodeSample && this.showCli)
+            this.showingSecondCodeSample = true;
     }
   } 
 }
