@@ -17,13 +17,12 @@
 
                 
             <div style="display: flex; flex-flow: row; align-self:center; justify-content: center;">
-                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="showCircle2 = true" >
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="nextIsCli = true" >
                     <div v-if="showFirstCodeSample">
-                        <pre>{{ firstCodeSample }}</pre>  
+                        <pre v-html="firstCodeSample"></pre>  
                     </div>
                 </transition>
             </div>   
-
                 <popover name="foo" event="hover">
                     <div style="font-family: 'Rock Salt', cursive; font-size: 38px; padding: 10px; display: flex; justify-content: center; align-content: center;">
                         <div>React!</div>
@@ -31,11 +30,7 @@
                 </popover>
                 <div>
                 </div>
-            </div>   
-
-
-
-              
+            </div>         
             <div style="display: flex; flex-flow: row; align-self:center; z-index: 1;">
                     <m-button 
                         v-if="hoverCircle1 && hoverCircle2"
@@ -44,7 +39,11 @@
                         ref="test"
                         :style="getStyle()"
                         unelevated 
-                        @click="smile = true;"><span slot="icon" class="emoji" :class="{ smile }" /><span v-if="!smile">FML</span><span v-else>VUE!</span></m-button>
+                        @click="smile = true;"><span slot="icon" class="emoji" :class="{ smile }" />
+                        <span v-if="!smile">FML</span>
+                        <span style="white-space: nowrap;" v-if="nextIsCli">CLI<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
+                        <span v-if="smile && !nextIsCli">VUE!</span>
+                    </m-button>
             </div>
    
                 <div class="welcome-container">
@@ -125,6 +124,8 @@ import thumbsup from '../assets/thumbsup.svg';
 import dantoon from '../assets/dan toon.gif';
 import stoon from '../assets/stoon.png';
 import Popover from 'vue-js-popover';
+import Prism from 'prismjs';
+
 const c = require('./sample1')
 
 Vue.use(Popover, { tooltip: true })
@@ -164,7 +165,8 @@ export default{
           hoverCircle2: false,
           smile: false,
           showFirstCodeSample: false,
-          firstCodeSample:  code2
+          firstCodeSample: Prism.highlight(code2, Prism.languages.html, 'html'),
+          nextIsCli: false 
       };
   },  
   methods: {
