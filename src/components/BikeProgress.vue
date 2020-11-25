@@ -123,7 +123,7 @@
 
               <progress-bar style="position: absolute; left: calc(50vw - 70px); top: 92vh; z-index: 1;" :options="options" :value="progress"/>     
                 <div style="position: absolute; bottom: -45px;"></div>
-                <div class="biker" :style=" { background: `transparent url(${biker}) 0 0`}">
+                <div class="biker" :style=" { background: `transparent url(${biker}) 0 0`, ...bikerStyle }">
                 </div>
                 <div style="position: absolute; bottom: -45px">
              
@@ -216,6 +216,7 @@ export default{
           showForthCodeSample: false,
           progress: 0,
           biker,
+          bikerStyle: {},
           options: {
   text: {
     color: '#FFFFFF',
@@ -257,7 +258,7 @@ export default{
             this.showingSecondCodeSample = true;
         }
 
-        this.progress += 12.5;
+        this.updateProgress();
     },
     getSpinnerStyle() {
         if (!this.showParagraph2) {
@@ -312,7 +313,16 @@ export default{
             this.showForthCodeSample = true;
         }
 
-        this.progress += 12.5;
+        this.updateProgress();
+    },
+    updateProgress() {
+        this.bikerStyle = { 'animation-play-state': 'running' };
+        setTimeout(() => this.bikerStyle = { 'animation-play-state': 'paused' }, 600);
+        
+        if (this.progress < 100)
+        {
+            this.progress += 12.5;
+        }
     }
   } 
 }
@@ -369,12 +379,9 @@ button {
    }
 }
 
-.sun {
- /* display: inline-block;*/
-}
-
 .biker {
   animation: ride 5s steps(43) 1 forwards; 
+  animation-play-state: paused;
   background-position: 0 0;
   width: 506px;
   height: 417px;
