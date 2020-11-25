@@ -105,6 +105,7 @@ export default {
   opacity: 0;
   position: fixed;
   -webkit-overflow-scrolling: auto;
+  z-index: 2;
 
   .content {
     display: inline-block;

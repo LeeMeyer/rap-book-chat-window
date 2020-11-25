@@ -17,10 +17,13 @@
 
                 
             <div style="display: flex; flex-flow: row; align-self:center; justify-content: center;">
-                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="nextIsCli = true" >
-                    <div v-if="showFirstCodeSample">
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="nextIsCli = true" @after-leave="showCli = true" >
+                    <div v-if="showFirstCodeSample && !showingCli">
                         <pre v-html="firstCodeSample"></pre>  
                     </div>
+                </transition>
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" @after-enter="showWow = true">
+                    <img v-if="showCli" :src="cliScreenshot"/>
                 </transition>
             </div>   
                 <popover name="foo" event="hover">
@@ -35,11 +38,12 @@
                     <m-button 
                         v-if="hoverCircle1 && hoverCircle2"
                         class="emoji-button"
+                        @click="clickEmoji()"
                         style="--mdc-theme-primary: #fff;" 
                         ref="test"
                         :style="getStyle()"
                         unelevated 
-                        @click="smile = true;"><span slot="icon" class="emoji" :class="{ cry: !smile, smile: smile && !nextIsCli, wow: nextIsCli }" />
+                       ><span slot="icon" class="emoji" :class="{ cry: !smile, smile: smile || nextIsCli, wow: showWow }" />
                         <span v-if="!smile">FML</span>
                         <span style="white-space: nowrap;" v-if="nextIsCli">CLI<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
                         <span v-if="smile && !nextIsCli">VUE!</span>
@@ -125,6 +129,7 @@ import dantoon from '../assets/dan toon.gif';
 import stoon from '../assets/stoon.png';
 import Popover from 'vue-js-popover';
 import Prism from 'prismjs';
+import cliScreenshot from "../assets/cli-select-features.png"
 
 const c = require('./sample1')
 
@@ -165,8 +170,12 @@ export default{
           hoverCircle2: false,
           smile: false,
           showFirstCodeSample: false,
+          showingCli: false,
+          showCli: false, 
           firstCodeSample: Prism.highlight(code2, Prism.languages.html, 'html'),
-          nextIsCli: false 
+          nextIsCli: false,
+          cliScreenshot,
+          showWow: false 
       };
   },  
   methods: {
@@ -189,12 +198,18 @@ export default{
         return {};
     },
     getStyle() {
-        if (this.smile && !this.showFirstCodeSample) {
+        if ((this.smile && !this.showFirstCodeSample) || this.showingCli) {
             let r = this.$refs.test.$el.getBoundingClientRect();
             return { position:  'absolute', bottom: r.bottom + 'px', top: r.top + 'px', right: r.right + 'px', left: r.left + 'px' };
         }
 
         return {};
+    },
+    clickEmoji() {
+        if (this.nextIsCli)
+            this.showingCli = true;
+        else 
+            this.smile = true;
     }
   } 
 }
