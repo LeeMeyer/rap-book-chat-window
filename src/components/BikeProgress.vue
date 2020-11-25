@@ -11,18 +11,31 @@
                 <transition enter-active-class="animate__animated animate__rollIn" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="showCircle2 = true">
                     <img style="align-self: center; margin: 10px; border-radius: 50%; margin-right: 50px; background: #fff; cursor: pointer; border: 1px solid;" width="200" height="200" v-if="showNextScreen && !smile" :src="dantoon" v-popover:foo.right  @mouseover="hoverCircle1 = true"/>
                 </transition>
-                <transition enter-active-class="animate__animated animate__rollIn animate__delay-half-s" leave-active-class="animate__animated animate__lightSpeedOutLeft">
+                <transition enter-active-class="animate__animated animate__rollIn animate__delay-half-s" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-leave="showFirstCodeSample = true">
                     <img style="align-self: center; margin: 10px; border-radius: 50%; background: #fff; cursor: pointer; border: 1px solid;" width="200" height="200" v-if="showNextScreen && !smile" :src="stoon"  v-popover:foo.right  @mouseover="hoverCircle2 = true"/>
                 </transition>
+
+                
+            <div style="display: flex; flex-flow: row; align-self:center; justify-content: center;">
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="showCircle2 = true" >
+                    <div v-if="showFirstCodeSample">
+                        <pre>{{ firstCodeSample }}</pre>  
+                    </div>
+                </transition>
+            </div>   
 
                 <popover name="foo" event="hover">
                     <div style="font-family: 'Rock Salt', cursive; font-size: 38px; padding: 10px; display: flex; justify-content: center; align-content: center;">
                         <div>React!</div>
                     </div>
                 </popover>
-            </div>
+                <div>
+                </div>
+            </div>   
 
-            
+
+
+              
             <div style="display: flex; flex-flow: row; align-self:center; z-index: 1;">
                     <m-button 
                         v-if="hoverCircle1 && hoverCircle2"
@@ -112,12 +125,17 @@ import thumbsup from '../assets/thumbsup.svg';
 import dantoon from '../assets/dan toon.gif';
 import stoon from '../assets/stoon.png';
 import Popover from 'vue-js-popover';
+const c = require('./sample1')
 
 Vue.use(Popover, { tooltip: true })
 Vue.use(iconbutton);
 Vue.use(button);
 Vue.use(card);
 Vue.use(fab);
+
+
+let code2 = c.code;
+
 
 export default{
   name: 'BikeProgress',
@@ -144,7 +162,9 @@ export default{
           showCircle2: false, 
           hoverCircle1: false,
           hoverCircle2: false,
-          smile: false
+          smile: false,
+          showFirstCodeSample: false,
+          firstCodeSample:  code2
       };
   },  
   methods: {
@@ -167,7 +187,7 @@ export default{
         return {};
     },
     getStyle() {
-        if (this.smile) {
+        if (this.smile && !this.showFirstCodeSample) {
             let r = this.$refs.test.$el.getBoundingClientRect();
             return { position:  'absolute', bottom: r.bottom + 'px', top: r.top + 'px', right: r.right + 'px', left: r.left + 'px' };
         }
@@ -349,7 +369,4 @@ body {
 .animate__delay-half-s {
     animation-delay: 0.5s;
 }
-
-
-
 </style>
