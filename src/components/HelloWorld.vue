@@ -383,4 +383,9 @@ a {
      margin-top: -60px !important;
      margin-right: -10px !important; 
 }
+
+body {
+  overflow-x: hidden;
+  background: #000;
+}
 </style>

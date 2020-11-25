@@ -14,7 +14,7 @@ export default new Vuex.Store({
     messageForWhichToExplainScore: null,
     scoreExplanantionModalIsOpen: false,
     messageList: [
-      { id: uniqid('message'), type: 'text', author: `user1`, data: { text: "What up Vue JS! You're for noobs, I guess. Your loser friendliness allows pests do deploy a mess!" }, score: 0, oldScore: 0, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' }
+      { id: uniqid('message'), type: 'text', author: `user1`, data: { text: "What up Vue JS! You're for noobs, I guess. Your loser friendliness lets pests deploy a mess!" }, score: 0, oldScore: 0, scoreAnimatedEntranceDelay : 0, scoreExplanation: '' }
     ],
     participants: [
       {

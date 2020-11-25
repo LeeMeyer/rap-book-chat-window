@@ -1,5 +1,6 @@
 <template>
-<div>
+<div>    
+    <progress-bar style="position: absolute; left: calc(50vw - 70px); bottom:15px; z-index: 1;" :options="options" :value="progress"/>    
     <div class="r_flex_container">        
             <div style="display: flex; flex-flow: row; align-self:center;">
                 <transition enter-active-class="animate__animated animate__fadeInDownBig"
@@ -16,7 +17,7 @@
                 </transition>                
             <div style="display: flex; flex-flow: row; align-self:center; justify-content: center;">
                 <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="nextIsCli = true" @after-leave="showCli = true" >
-                    <div v-if="showFirstCodeSample && !showingCli">
+                    <div v-if="showFirstCodeSample && !showingCli" style="padding-left: 10px;">
                         <pre v-html="firstCodeSample"></pre>  
                     </div>
                 </transition>
@@ -25,18 +26,15 @@
                 </transition>
                 <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" 
                   leave-active-class="animate__animated animate__lightSpeedOutLeft" 
-                  @after-enter="showBigSmile = true"
                   @after-leave="showThirdCodeSample = true">
-                    <div style="height: 70vh; width: 90vw; overflow: scroll; background: white; margin-top: 10px;" v-if="showSecondCodeSample && !showingThirdCodeSample">
+                    <div style="height: 70vh; width: 90vw; overflow: scroll; background: white; padding-left: 10px;" v-if="showSecondCodeSample && !showingThirdCodeSample">
                         <pre v-html="secondCodeSample"></pre>  
                     </div>
                 </transition>
 
                 <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft">
-                    <div v-if="showThirdCodeSample || showForthCodeSample" style="width: 90vw;  background: white; margin-top: 10px;">
-                        <pre>
-                            <TransitionedWords :transitionedHtml="showThirdCodeSample ? forthCodeSample : thirdCodeSample" :allowHtml="true" />
-                        </pre>
+                    <div v-if="showThirdCodeSample || showForthCodeSample" style="width: 90vw;  background: white; max-height: 85vh;">
+                        <pre><TransitionedWords :transitionedHtml="showThirdCodeSample ? forthCodeSample : thirdCodeSample" :allowHtml="true" /></pre>
                     </div>
                 </transition>
             </div>   
@@ -61,8 +59,9 @@
                         <span v-if="!smile">FML</span>
                         <span style="white-space: nowrap;" v-if="nextIsCli && !showCli">CLI<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
                         <span style="white-space: nowrap;" v-if="showCli && !showSecondCodeSample">SFC<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
-                        <span style="white-space: nowrap;" v-if="showSecondCodeSample && !showThirdCodeSample">NEXT <div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span> 
-                        <span style="white-space: nowrap;" v-if="showThirdCodeSample">MIGRATE <div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">🛠️</div></span> 
+                        <span style="white-space: nowrap;" v-if="showSecondCodeSample && !showThirdCodeSample && progress < 87.5">NEXT <div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span> 
+                        <span style="white-space: nowrap;" v-if="showSecondCodeSample && !showThirdCodeSample && progress >= 87.5">DEPLOY <div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span> 
+                        <span style="white-space: nowrap;" v-if="showThirdCodeSample && progress < 100">MIGRATE <div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">🛠️</div></span>
                         <span v-if="smile && !nextIsCli">VUE!</span>
                     </m-button>
             </div>
@@ -120,8 +119,7 @@
             </div>
         <div class="r_flex_fixed_child">
             <div class="grass">
-
-              <progress-bar style="position: absolute; left: calc(50vw - 70px); top: 92vh; z-index: 1;" :options="options" :value="progress"/>     
+ 
                 <div style="position: absolute; bottom: -45px;"></div>
                 <div class="biker" :style=" { background: `transparent url(${biker}) 0 0`, ...bikerStyle }">
                 </div>
@@ -281,6 +279,10 @@ export default{
                 s.width = '150px';
             }
 
+            if (this.progress >= 87.5) {
+                s.width = "180px";
+            }
+
             return s;
         }
         
@@ -316,12 +318,12 @@ export default{
         this.updateProgress();
     },
     updateProgress() {
-        this.bikerStyle = { 'animation-play-state': 'running' };
-        setTimeout(() => this.bikerStyle = { 'animation-play-state': 'paused' }, 600);
-        
         if (this.progress < 100)
         {
             this.progress += 12.5;
+
+            this.bikerStyle = { 'animation-play-state': 'running' };
+            setTimeout(() => this.bikerStyle = { 'animation-play-state': 'paused' }, 600);
         }
     }
   } 
@@ -380,7 +382,7 @@ button {
 }
 
 .biker {
-  animation: ride 5s steps(43) 1 forwards; 
+  animation: ride 4.9s steps(43) 1 forwards; 
   animation-play-state: paused;
   background-position: 0 0;
   width: 506px;
@@ -390,7 +392,15 @@ button {
 }
 
 @keyframes ride {
-  100%  { background-position: 0 -18705px; }
+
+  85% {
+      margin-left: 70vw;
+  }
+  100%  
+  {
+      margin-left: 70vw; 
+      background-position: 0 -18705px; 
+  }
 }
 
 .flags {
