@@ -120,8 +120,14 @@
             </div>
         <div class="r_flex_fixed_child">
             <div class="grass">
+
+              <progress-bar style="position: absolute; left: calc(50vw - 70px); top: 92vh; z-index: 1;" :options="options" :value="progress"/>     
                 <div style="position: absolute; bottom: -45px;"></div>
-                <div class="biker"></div>
+                <div class="biker">
+                </div>
+                <div style="position: absolute; bottom: -45px">
+             
+                </div>
             </div>
         </div>
     </div>
@@ -147,6 +153,8 @@ import Popover from 'vue-js-popover';
 import Prism from 'prismjs';
 import cliScreenshot from "../assets/cli-select-features.png"
 import TransitionedWords from './TransitionedWords'
+import ProgressBar from 'vuejs-progress-bar';
+
 
 const c = require('./sample1')
 const c2 = require('./sample2')
@@ -157,6 +165,7 @@ Vue.use(iconbutton);
 Vue.use(button);
 Vue.use(card);
 Vue.use(fab);
+Vue.use(ProgressBar);
 
 let code2 = c.code;
 let code3 = c2.code;
@@ -202,7 +211,34 @@ export default{
           showingThirdCodeSample: false,
           showThirdCodeSample: false,
           thirdCodeSample: Prism.highlight(c3.code1.replaceAll("=>", "=˃"), Prism.languages.javascript, 'javascript'),
-          forthCodeSample: Prism.highlight(c3.code2.replaceAll("=>", "=˃"), Prism.languages.javascript, 'javascript')
+          forthCodeSample: Prism.highlight(c3.code2.replaceAll("=>", "=˃"), Prism.languages.javascript, 'javascript'),
+          showForthCodeSample: false,
+          progress: 0,
+          options: {
+  text: {
+    color: '#FFFFFF',
+    shadowEnable: true,
+    shadowColor: '#000000',
+    fontSize: 14,
+    fontFamily: 'Helvetica',
+    dynamicPosition: false,
+    hideText: false
+  },
+  progress: {
+    color: '#2dbd2d',
+    backgroundColor: '#333333'
+  },
+  layout: {
+    height: 35,
+    width: '100%',
+    verticalTextAlign: 61,
+    horizontalTextAlign: 43,
+    zeroOffset: 0,
+    strokeWidth: 30,
+    progressPadding: 0,
+    type: 'line'
+  }
+}
       };
   },  
   methods: {
@@ -218,6 +254,8 @@ export default{
         else if (!this.showingSecondCodeSample) {
             this.showingSecondCodeSample = true;
         }
+
+        this.progress += 12.5;
     },
     getSpinnerStyle() {
         if (!this.showParagraph2) {
@@ -271,6 +309,8 @@ export default{
             this.showThirdCodeSample = false;
             this.showForthCodeSample = true;
         }
+
+        this.progress += 12.5;
     }
   } 
 }
