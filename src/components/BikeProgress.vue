@@ -2,33 +2,36 @@
 <div>
     <div class="r_flex_container">        
             <div style="display: flex; flex-flow: row; align-self:center;">
-                <transition enter-active-class="animate__animated animate__fadeInDownBig">
-                    <h1 v-if="showNextScreen" style="margin-top: 100%; margin-bottom: 30px;">Choose a framework</h1>
+                <transition enter-active-class="animate__animated animate__fadeInDownBig"
+                leave-active-class="animate__animated animate__lightSpeedOutLeft">
+                    <h1 v-if="showNextScreen && !smile" style="margin-top: 50%; margin-bottom: 30px;">Choose a framework</h1>
                 </transition>
             </div>            
             <div style="display: flex; flex-flow: row; align-self:center;">
-                <transition enter-active-class="animate__animated animate__rollIn">
-                    <img style="align-self: center; margin: 10px; border-radius: 50%; margin-right: 50px; background: #fff; cursor: pointer; border: 1px solid;" width="200" height="200" v-if="showNextScreen" :src="dantoon" v-popover:foo.right  @mouseover="hoverCircle1 = true"/>
+                <transition enter-active-class="animate__animated animate__rollIn" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="showCircle2 = true">
+                    <img style="align-self: center; margin: 10px; border-radius: 50%; margin-right: 50px; background: #fff; cursor: pointer; border: 1px solid;" width="200" height="200" v-if="showNextScreen && !smile" :src="dantoon" v-popover:foo.right  @mouseover="hoverCircle1 = true"/>
                 </transition>
-                <transition enter-active-class="animate__animated animate__rollIn" @after-enter="showEmojiButton = true">
-                    <img style="animation-delay: 0.5s; align-self: center; margin: 10px; border-radius: 50%; background: #fff; cursor: pointer; border: 1px solid;" width="200" height="200" v-if="showNextScreen" :src="stoon"  v-popover:foo.right  @mouseover="hoverCircle2 = true"/>
+                <transition enter-active-class="animate__animated animate__rollIn animate__delay-half-s" leave-active-class="animate__animated animate__lightSpeedOutLeft">
+                    <img style="align-self: center; margin: 10px; border-radius: 50%; background: #fff; cursor: pointer; border: 1px solid;" width="200" height="200" v-if="showNextScreen && !smile" :src="stoon"  v-popover:foo.right  @mouseover="hoverCircle2 = true"/>
                 </transition>
 
                 <popover name="foo" event="hover">
-                    <div style="font-family: 'Rock Salt', cursive; font-size: 38px; padding: 10px;">
-                        React!
+                    <div style="font-family: 'Rock Salt', cursive; font-size: 38px; padding: 10px; display: flex; justify-content: center; align-content: center;">
+                        <div>React!</div>
                     </div>
                 </popover>
             </div>
 
             
-            <div style="display: flex; flex-flow: row; align-self:center;">
+            <div style="display: flex; flex-flow: row; align-self:center; z-index: 1;">
                     <m-button 
                         v-if="hoverCircle1 && hoverCircle2"
                         class="emoji-button"
                         style="--mdc-theme-primary: #fff;" 
+                        ref="test"
+                        :style="getStyle()"
                         unelevated 
-                        @click="smile = !smile"><span slot="icon" class="emoji" :class="{ smile }" /><span>FML</span></m-button>
+                        @click="smile = true;"><span slot="icon" class="emoji" :class="{ smile }" /><span v-if="!smile">FML</span><span v-else>VUE!</span></m-button>
             </div>
    
                 <div class="welcome-container">
@@ -159,6 +162,14 @@ export default{
         if (!this.showParagraph2) {
             let r = this.$refs.button.$el.getBoundingClientRect();
             return { position:  'absolute', bottom: r.bottom + 'px', top: r.top + 'px', right: r.right + 'px', left: r.left + 'px' }; 
+        }
+
+        return {};
+    },
+    getStyle() {
+        if (this.smile) {
+            let r = this.$refs.test.$el.getBoundingClientRect();
+            return { position:  'absolute', bottom: r.bottom + 'px', top: r.top + 'px', right: r.right + 'px', left: r.left + 'px' };
         }
 
         return {};
@@ -334,5 +345,11 @@ body {
     padding: 0;
     width:100px;
 }
+
+.animate__delay-half-s {
+    animation-delay: 0.5s;
+}
+
+
 
 </style>
