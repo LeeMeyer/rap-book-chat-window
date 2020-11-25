@@ -27,14 +27,16 @@
                   leave-active-class="animate__animated animate__lightSpeedOutLeft" 
                   @after-enter="showBigSmile = true"
                   @after-leave="showThirdCodeSample = true">
-                    <div style="height: 500px; width: 90vw; overflow: scroll; background: white; margin-top: 10px;" v-if="showSecondCodeSample && !showingThirdCodeSample">
+                    <div style="height: 70vh; width: 90vw; overflow: scroll; background: white; margin-top: 10px;" v-if="showSecondCodeSample && !showingThirdCodeSample">
                         <pre v-html="secondCodeSample"></pre>  
                     </div>
                 </transition>
 
                 <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft">
-                    <div v-if="showThirdCodeSample" style="height: 500px; width: 90vw; overflow: scroll; background: white; margin-top: 10px;">
-                        <TransitionedWords :transitionedHtml="showThirdCodeSample ? thirdCodeSample : forthCodeSample" :allowHtml="true" />
+                    <div v-if="showThirdCodeSample || showForthCodeSample" style="width: 90vw;  background: white; margin-top: 10px;">
+                        <pre>
+                            <TransitionedWords :transitionedHtml="showThirdCodeSample ? forthCodeSample : thirdCodeSample" :allowHtml="true" />
+                        </pre>
                     </div>
                 </transition>
             </div>   
@@ -59,7 +61,8 @@
                         <span v-if="!smile">FML</span>
                         <span style="white-space: nowrap;" v-if="nextIsCli && !showCli">CLI<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
                         <span style="white-space: nowrap;" v-if="showCli && !showSecondCodeSample">SFC<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
-                        <span style="white-space: nowrap;" v-if="showSecondCodeSample">VUE 3<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span> 
+                        <span style="white-space: nowrap;" v-if="showSecondCodeSample && !showThirdCodeSample">NEXT <div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span> 
+                        <span style="white-space: nowrap;" v-if="showThirdCodeSample">MIGRATE <div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">🛠️</div></span> 
                         <span v-if="smile && !nextIsCli">VUE!</span>
                     </m-button>
             </div>
@@ -143,6 +146,7 @@ import stoon from '../assets/stoon.png';
 import Popover from 'vue-js-popover';
 import Prism from 'prismjs';
 import cliScreenshot from "../assets/cli-select-features.png"
+import TransitionedWords from './TransitionedWords'
 
 const c = require('./sample1')
 const c2 = require('./sample2')
@@ -160,6 +164,7 @@ let code3 = c2.code;
 export default{
   name: 'BikeProgress',
    components: {
+    TransitionedWords
   },
   data() {
       return  {
@@ -227,19 +232,21 @@ export default{
             let r = this.$refs.test.$el.getBoundingClientRect();
             var s = { position:  'absolute', bottom: r.bottom + 'px', top: r.top + 'px', right: r.right + 'px', left: r.left + 'px' };
             
-            if (this.showSecondCodeSample) 
+            if (this.showThirdCodeSample) {
+                s.width = '180px';
+            }
+            else if (this.showSecondCodeSample) 
             {
                 s.width = '150px';
             }
 
             return s;
         }
-
         
-            console.log(this.showSecondCodeSample)
-
-
-        if (this.showSecondCodeSample) 
+        if (this.showThirdCodeSample) {
+                s.width = '180px';
+        }
+        else if (this.showSecondCodeSample) 
         {
             return { width: '150px' };
         }
@@ -258,6 +265,11 @@ export default{
             
         if (this.showSecondCodeSample && !this.showingThirdCodeSample) {
             this.showingThirdCodeSample = true;
+        }
+
+        if (this.showThirdCodeSample) {
+            this.showThirdCodeSample = false;
+            this.showForthCodeSample = true;
         }
     }
   } 
@@ -447,6 +459,8 @@ body {
     height: 80px;
     color: #2c3e50;
     width: 130px;
+    border: 1px solid;
+    border-color: black;
 }
 
 .emoji {

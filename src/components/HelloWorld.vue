@@ -366,13 +366,6 @@ a {
   content: '\a0'
 }
 
-/*pre {
-  background: rgba(76, 175, 80, 0.1);
-  margin: 20px;
-  padding: 20px;
-  padding-top: 0;
-}*/
-
 .sc-header {
   background-image: url('https://user-images.githubusercontent.com/18104679/99765370-091b5c00-2b53-11eb-8248-3c9f742cf45d.png') !important;
   background-size: cover !important;
