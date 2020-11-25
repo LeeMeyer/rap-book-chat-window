@@ -123,7 +123,7 @@
 
               <progress-bar style="position: absolute; left: calc(50vw - 70px); top: 92vh; z-index: 1;" :options="options" :value="progress"/>     
                 <div style="position: absolute; bottom: -45px;"></div>
-                <div class="biker">
+                <div class="biker" :style=" { background: `transparent url(${biker}) 0 0`}">
                 </div>
                 <div style="position: absolute; bottom: -45px">
              
@@ -154,6 +154,7 @@ import Prism from 'prismjs';
 import cliScreenshot from "../assets/cli-select-features.png"
 import TransitionedWords from './TransitionedWords'
 import ProgressBar from 'vuejs-progress-bar';
+import biker from "../assets/biker.png";
 
 
 const c = require('./sample1')
@@ -214,6 +215,7 @@ export default{
           forthCodeSample: Prism.highlight(c3.code2.replaceAll("=>", "=˃"), Prism.languages.javascript, 'javascript'),
           showForthCodeSample: false,
           progress: 0,
+          biker,
           options: {
   text: {
     color: '#FFFFFF',
@@ -372,7 +374,6 @@ button {
 }
 
 .biker {
-  background: transparent url('https://user-images.githubusercontent.com/18104679/99868859-7a721200-2c1a-11eb-8f2d-b9dce937ee9a.png') 0 0;
   animation: ride 5s steps(43) 1 forwards; 
   background-position: 0 0;
   width: 506px;
