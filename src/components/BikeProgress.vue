@@ -1,6 +1,6 @@
 <template>
 <div>    
-    <progress-bar style="position: absolute; left: calc(50vw - 70px); bottom:15px; z-index: 1;" :options="options" :value="progress"/>    
+    <progress-bar style="position: absolute; left: calc(50vw - 70px); bottom:15px; z-index: 1; margin-left: 10px;" :options="options" :value="progress"/>    
     <div class="r_flex_container">        
             <div style="display: flex; flex-flow: row; align-self:center;">
                 <transition enter-active-class="animate__animated animate__fadeInDownBig"
