@@ -23,7 +23,7 @@
                 <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-leave="showSecondCodeSample = true" @after-enter="showWow = true">
                     <img v-if="showCli && !showingSecondCodeSample" :src="cliScreenshot"/>
                 </transition>
-                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" >
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-enter="showBigSmile = true">
                     <div style="height: 500px; width: 90vw; overflow: scroll; background: white; margin-top: 10px;" v-if="showSecondCodeSample">
                         <pre v-html="secondCodeSample"></pre>  
                     </div>
@@ -46,10 +46,11 @@
                         ref="test"
                         :style="getStyle()"
                         unelevated 
-                       ><span slot="icon" class="emoji" :class="{ cry: !smile, smile: smile || nextIsCli, wow: showWow }" />
+                       ><span slot="icon" class="emoji" :class="{ cry: !smile, smile: smile || nextIsCli, wow: showWow, bigSmile: showBigSmile }" />
                         <span v-if="!smile">FML</span>
                         <span style="white-space: nowrap;" v-if="nextIsCli && !showCli">CLI<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
-                        <span style="white-space: nowrap;" v-if="showCli">SFC<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
+                        <span style="white-space: nowrap;" v-if="showCli && !showSecondCodeSample">SFC<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span>
+                        <span style="white-space: nowrap;" v-if="showSecondCodeSample">VUE 3<div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">➜</div></span> 
                         <span v-if="smile && !nextIsCli">VUE!</span>
                     </m-button>
             </div>
@@ -181,7 +182,8 @@ export default{
           showWow: false,
           secondCodeSample: Prism.highlight(code3, Prism.languages.html, 'html'),
           showingSecondCodeSample: false,
-          showSecondCodeSample: false
+          showSecondCodeSample: false,
+          showBigSmile: false
       };
   },  
   methods: {
@@ -207,9 +209,27 @@ export default{
         return {};
     },
     getStyle() {
-        if ((this.smile && !this.showFirstCodeSample) || this.showingCli || this.showSecondCodeSample) {
+        if (((this.smile && !this.showFirstCodeSample) || this.showingCli || this.showingSecondCodeSample)) {
             let r = this.$refs.test.$el.getBoundingClientRect();
-            return { position:  'absolute', bottom: r.bottom + 'px', top: r.top + 'px', right: r.right + 'px', left: r.left + 'px' };
+            var s = { position:  'absolute', bottom: r.bottom + 'px', top: r.top + 'px', right: r.right + 'px', left: r.left + 'px' };
+            
+            console.log(this.showSecondCodeSample)
+
+            if (this.showSecondCodeSample) 
+            {
+                s.width = '150px';
+            }
+
+            return s;
+        }
+
+        
+            console.log(this.showSecondCodeSample)
+
+
+        if (this.showSecondCodeSample) 
+        {
+            return { width: '150px' };
         }
 
         return {};
@@ -374,6 +394,16 @@ button {
 .emoji.wow {
    background-position: 0 0;
    animation: wow-emoji 1s steps(10) forwards;
+}
+
+.emoji.bigSmile {
+   background-position: 0 -500px;
+   animation: big-smile 1s steps(3) forwards;
+}
+
+@keyframes big-smile {
+  0%  { background-position: 0 -500px; }
+  100%  { background-position: 0 -800px; }
 }
 
 @keyframes wow-emoji {
