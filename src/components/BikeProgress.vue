@@ -32,11 +32,19 @@
                     </div>
                 </transition>
 
-                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft">
-                    <div v-if="showThirdCodeSample || showForthCodeSample" style="width: 90vw;  background: white; max-height: 85vh;">
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft" @after-leave="gameovercomplete = true">
+                    <div v-if="(showThirdCodeSample || showForthCodeSample) && !isgameover" style="width: 90vw;  background: white; max-height: 85vh;">
                         <pre><TransitionedWords :transitionedHtml="showThirdCodeSample ? forthCodeSample : thirdCodeSample" :allowHtml="true" /></pre>
                     </div>
                 </transition>
+
+                <transition enter-active-class="animate__animated animate__animated animate__lightSpeedInRight" leave-active-class="animate__animated animate__lightSpeedOutLeft">
+                    <div v-if="gameovercomplete" style="width: 90vw; max-height: 85vh; display: flex; align-content: center; justify-content: center; padding-top: 10px;">
+                        <img :src="gameover" style="align-self: center;"/>
+                    </div>
+                </transition>
+
+                
             </div>   
                 <popover name="foo" event="hover">
                     <div style="font-family: 'Rock Salt', cursive; font-size: 38px; padding: 10px; display: flex; justify-content: center; align-content: center;">
@@ -47,8 +55,9 @@
                 </div>
             </div>         
             <div style="display: flex; flex-flow: row; align-self:center; z-index: 1;">
+                <transition leave-active-class="animate__animated animate__lightSpeedOutLeft">
                     <m-button 
-                        v-if="hoverCircle1 && hoverCircle2"
+                        v-if="hoverCircle1 && hoverCircle2 && !isgameover"
                         class="emoji-button"
                         @click="clickEmoji()"
                         style="--mdc-theme-primary: #fff;" 
@@ -64,6 +73,7 @@
                         <span style="white-space: nowrap;" v-if="showThirdCodeSample && progress < 100">MIGRATE <div style="display: inline-block;" class="animate__animated animate__heartBeat animate__infinite animate__slower">🛠️</div></span>
                         <span v-if="smile && !nextIsCli">VUE!</span>
                     </m-button>
+                </transition>
             </div>
                 <div class="welcome-container">
                     <transition 
@@ -153,7 +163,7 @@ import cliScreenshot from "../assets/cli-select-features.png"
 import TransitionedWords from './TransitionedWords'
 import ProgressBar from 'vuejs-progress-bar';
 import biker from "../assets/biker.png";
-
+import gameover from '../assets/s-l300.jpg';
 
 const c = require('./sample1')
 const c2 = require('./sample2')
@@ -214,6 +224,9 @@ export default{
           showForthCodeSample: false,
           progress: 0,
           biker,
+          gameover,
+          isgameover: false,
+          gameovercomplete: false,
           bikerStyle: {},
           options: {
   text: {
@@ -324,6 +337,10 @@ export default{
 
             this.bikerStyle = { 'animation-play-state': 'running' };
             setTimeout(() => this.bikerStyle = { 'animation-play-state': 'paused' }, 600);
+        }
+        else {
+            
+            this.isgameover = true;
         }
     }
   } 
